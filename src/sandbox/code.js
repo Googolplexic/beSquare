@@ -24,6 +24,8 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
         }
+
+        
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);

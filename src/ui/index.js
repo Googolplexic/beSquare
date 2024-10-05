@@ -22,6 +22,19 @@ addOnUISdk.ready.then(async () => {
         } catch (error) {
             console.error('Microphone access denied', error);
         }
+    
+    // Voice Command Activation
+    const startButton = document.getElementById('startBtn');
+    startButton.addEventListener('click', async event => {
+        await scriptApi.startAudioRecording();
+    });
+
+    // Voice Command Deactivation
+    const stopButton = document.getElementById('stopBtn');
+    stopButton.addEventListener('click', async event => {
+        await scriptApi.stopAudioRecording();
+    });
+
     });
     // Enable the button only when:
     // 1. addOnUISdk is ready,
@@ -29,4 +42,6 @@ addOnUISdk.ready.then(async () => {
     // 3. click event listener is registered.
     createRectangleButton.disabled = false;
     microphoneButton.disabled = false;
+    startButton.disabled = false;
+    stopButton.disabled = false;
 });
