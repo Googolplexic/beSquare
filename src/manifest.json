@@ -1,0 +1,22 @@
+{
+    "testId": "84eae436-09b6-4838-bdc2-63ee8d607812",
+    "name": "Voice Commands",
+    "version": "1.0.0",
+    "manifestVersion": 2,
+    "requirements": {
+        "apps": [
+            {
+                "name": "Express",
+                "apiVersion": 1
+            }
+        ]
+    },
+    "entryPoints": [
+        {
+            "type": "panel",
+            "id": "panel1",
+            "main": "index.html",
+            "documentSandbox": "sandbox/code.js"
+        }
+    ]
+}
