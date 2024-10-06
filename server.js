@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools, create_rectangle, create_line } = require('./assistant');
+const { tools, create_rectangle, create_line, create_ellipse } = require('./assistant');
 const { initWebSocket } = require('./websocket');
 const { create } = require('lodash');
 
@@ -29,6 +29,7 @@ let ASSISTANT_ID;
 
 // Initialize the assistant
 async function initializeAssistant() {
+    console.log("tools, ", tools)
     try {
         // Create a new assistant if ASSISTANT_ID is not provided in env
         if (!process.env.ASSISTANT_ID) {
@@ -176,6 +177,10 @@ async function processToolCalls(toolCalls) {
                     output = await create_line(parsedArgs.xStart, parsedArgs.yStart, parsedArgs.xEnd, parsedArgs.yEnd, parsedArgs.width, parsedArgs.color);
                     console.log("function complete");
                     break;
+                case 'create_ellipse':
+                    output = await create_ellipse(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
+                    break;
+                // Add cases for other functions as needed
                 default:
                     output = `Function ${name} not implemented`;
             }

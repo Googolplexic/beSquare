@@ -70,10 +70,10 @@ function start() {
         createEllipse: (width, height, xLocation, yLocation, color) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.
-            ellipse.radiusX = width / 2;
-            ellipse.radiusY = height / 2;
+            ellipse.rx = width / 2;
+            ellipse.ry = height / 2;
             // Define ellipse position.
-            ellipse.translation = { x: xLocation, y: yLocation };
+            ellipse.setPositionInParent({x:xLocation, y:yLocation}, {x:ellipse.rx, y:ellipse.ry});
             // Fill the ellipse with the color.
             const ellipseFill = editor.makeColorFill(color);
             ellipse.fill = ellipseFill;
