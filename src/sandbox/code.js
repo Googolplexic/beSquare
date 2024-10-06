@@ -96,7 +96,7 @@ function start() {
             const textNode = editor.createText();
 
             // Set the text content
-            textNode.fullContent.text = textContent;
+            textNode.fullContent.text = text;
 
             // Set the position of the text
             textNode.setPositionInParent({ x: xLocation, y: yLocation }, { x: 0, y: 0 });
