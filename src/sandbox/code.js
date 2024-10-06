@@ -76,8 +76,8 @@ function start() {
         setFontSize: (textNode, size) => {
             textNode.characterStyle.fontSize = size;
         },
-        setFontStyle: (textNode, style) => {
-            textNode.characterStyle.fontStyle = style;
+        setFont: (textNode, font) => {
+            textNode.characterStyle.font = font;
         },  
         setObjectStroke: (object, {red, green, blue, alpha }) => {
             const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
