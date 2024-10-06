@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
 require('dotenv').config();
+import {tools} from "./assistant"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,8 @@ const openai = new OpenAI({
 // Store the assistant ID after creation
 let ASSISTANT_ID;
 
+
+
 // Initialize the assistant
 async function initializeAssistant() {
     try {
@@ -23,6 +26,7 @@ async function initializeAssistant() {
                 name: "Adobe Express Helper",
                 instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries.",
                 model: "gpt-4o-mini",
+                tools: tools
             });
             ASSISTANT_ID = assistant.id;
             console.log('Created new assistant with ID:', ASSISTANT_ID);
