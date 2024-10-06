@@ -64,19 +64,6 @@ addOnUISdk.ready.then(async () => {
             }
         }
 
-
-        // Voice Command Activation
-        const startButton = document.getElementById('startBtn');
-        startButton.addEventListener('click', async event => {
-            await scriptApi.startAudioRecording();
-        });
-
-        // Voice Command Deactivation
-        const stopButton = document.getElementById('stopBtn');
-        stopButton.addEventListener('click', async event => {
-            await scriptApi.stopAudioRecording();
-        });
-
     });
     // Enable the button only when:
     // 1. addOnUISdk is ready,
