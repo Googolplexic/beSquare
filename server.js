@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-import {tools} from "./assistant"
+// import {tools} from "./assistant"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,7 +29,7 @@ async function initializeAssistant() {
                 name: "Adobe Express Helper",
                 instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries.",
                 model: "gpt-4o-mini",
-                tools: tools
+                tools: []
             });
             ASSISTANT_ID = assistant.id;
             console.log('Created new assistant with ID:', ASSISTANT_ID);
