@@ -92,6 +92,7 @@ app.post('/api/chat', async (req, res) => {
             role: "user",
             content: message
         });
+        console.log("Message sent to API: ", message);
 
         // Create a run
         const run = await openai.beta.threads.runs.create(threadId, {
@@ -103,7 +104,7 @@ app.post('/api/chat', async (req, res) => {
 
         // Wait for the run to complete (with timeout)
         const startTime = Date.now();
-        const timeout = 30000; // 30 seconds timeout
+        const timeout = 300000; // 30 seconds timeout
 
         while (runStatus.status !== 'completed' && runStatus.status !== 'failed') {
             if (Date.now() - startTime > timeout) {
@@ -120,6 +121,7 @@ app.post('/api/chat', async (req, res) => {
 
         // Get the messages (including the assistant's response)
         const messages = await openai.beta.threads.messages.list(threadId);
+        
 
         // Get the latest assistant message
         const assistantMessage = messages.data
