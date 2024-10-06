@@ -30,7 +30,7 @@ async function initializeAssistant() {
                 name: "Adobe Express Helper",
                 instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries.",
                 model: "gpt-4o-mini",
-                tools: tools
+                tools: []
             });
             ASSISTANT_ID = assistant.id;
             console.log('Created new assistant with ID:', ASSISTANT_ID);

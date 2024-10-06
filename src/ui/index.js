@@ -14,6 +14,7 @@ addOnUISdk.ready.then(async () => {
     createRectangleButton.addEventListener("click", async event => {
         scriptApi.setSelectionObjectColorFill({ red: 1, green: 0, blue: 1, alpha: 1 });
     });
+    createRectangleButton.disabled = false;
     // Request microphone access.
     const microphoneButton = document.getElementById('request-mic');
     const audioOutput = document.getElementById('audio-output');
@@ -65,6 +66,7 @@ addOnUISdk.ready.then(async () => {
         }
 
     });
+    microphoneButton.disabled = false;
 
     const gptTranscript = document.getElementById("initAssistant");
     let globalcurrentThreadID = "";
@@ -200,7 +202,7 @@ addOnUISdk.ready.then(async () => {
     // 1. addOnUISdk is ready,
     // 2. scriptApi is available, and
     // 3. click event listener is registered.
-    createRectangleButton.disabled = false;
+    
     gptTranscript.disabled = false;
-    microphoneButton.disabled = false;
+   
 });
