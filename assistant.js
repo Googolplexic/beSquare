@@ -109,7 +109,7 @@ const tools = [
                         "additionalProperties": false
                     }
                 },
-                "required": ["xStart", "yStart", "xEnd", "yEnd", "width","color"]
+                "required": ["xStart", "yStart", "xEnd", "yEnd", "width", "color"]
             }
         }
     }

@@ -17,21 +17,51 @@ function start() {
     // i.e., to the index.html file of this add-on.
 
     const sandboxApi = {
+        getPageWidth: () => {
+            try {
+                // Get the current page
+                const currentPage = editor.context.currentPage;
+
+                // Get the width of the current page
+                const pageWidth = currentPage.width;
+
+                console.log(`Current page width: ${pageWidth}`);
+
+                return pageWidth;
+            } catch (error) {
+                console.error("Error getting page width:", error);
+            }
+        },
+        getPageHeight: () => {
+            try {
+                // Get the current page
+                const currentPage = editor.context.currentPage;
+
+                // Get the height of the current page
+                const pageHeight = currentPage.height;
+
+                console.log(`Current page height: ${pageHeight}`);
+
+                return pageHeight;
+            } catch (error) {
+                console.error("Error getting page height:", error);
+            }
+        },
         createRectangle: (width, height, xLocation, yLocation, color) => {
             console.log("Creating rectangle");
             const rectangle = editor.createRectangle();
-            
+
             // Define rectangle dimensions.
             rectangle.width = width;
             rectangle.height = height;
-            
+
             // Define rectangle position.
             rectangle.translation = { x: xLocation, y: yLocation };
-            
+
             // Fill the rectangle with the color passed in the `color` object.
             const rectangleFill = editor.makeColorFill(color);
             rectangle.fill = rectangleFill;
-            
+
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
@@ -50,7 +80,7 @@ function start() {
             // Add the ellipse to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(ellipse);
-        },  
+        },
         createLine: (xStart, yStart, xEnd, yEnd, width, color) => {
             const line = editor.createLine();
             // Define line start and end points.
@@ -64,13 +94,17 @@ function start() {
         },
         createText: (text, xLocation, yLocation, color) => {
             const textNode = editor.createText();
-            // Set the text content.
-            textNode.text = text;
-            // Define text position.
-            textNode.translation = { x: xLocation, y: yLocation };
-            // Set the text color.
-            const textColor = editor.makeColorFill(color);
-            textNode.fill = textColor;
+
+            // Set the text content
+            textNode.fullContent.text = textContent;
+
+            // Set the position of the text
+            textNode.setPositionInParent({ x: xLocation, y: yLocation }, { x: 0, y: 0 });
+
+            // Set the font size
+            textNode.characterStyles.fontSize = fontSize;
+
+            textNode.characterStyles.color = color;
             // Add the text to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);
@@ -124,7 +158,7 @@ function start() {
         },
         setFont: (textNode, font) => {
             textNode.characterStyle.font = font;
-        },  
+        },
         setObjectStroke: (object, color) => {
             const stroke = editor.makeStroke({ color, width: 2 });
             object.stroke = stroke;
