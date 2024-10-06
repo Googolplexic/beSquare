@@ -98,11 +98,12 @@ app.post('/api/chat', async (req, res) => {
 
         while (retryCount < maxRetries) {
             runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
-
+            // nothing more for it to do
             if (runStatus.status === 'completed') {
                 break;
             } else if (runStatus.status === 'failed') {
                 throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
+            // LLM response invokes some function through function-calling
             } else if (runStatus.status === 'requires_action') {
                 const requiredAction = runStatus.required_action;
                 if (requiredAction.type === 'submit_tool_outputs') {
@@ -165,6 +166,7 @@ async function processToolCalls(toolCalls) {
         console.log(`Processing tool call: ${name} with arguments: ${args}`); // Log tool call details
 
         try {
+            // call the appropriate function, (cannot be called directly due to websockets implementation and )
             const parsedArgs = JSON.parse(args);
 
             switch (name) {
