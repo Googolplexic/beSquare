@@ -27,7 +27,7 @@
             "documentSandbox": "sandbox/code.js",
             "permissions": {
 
-                "sandbox": ["allow-popups"]
+                "sandbox": ["allow-popups"],
 
                 "microphone": "*"
 
