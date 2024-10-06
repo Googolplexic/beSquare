@@ -11,12 +11,27 @@
             }
         ]
     },
+    "permissions": [
+        "microphone"
+    ],
+    "permissions_policy": {
+        "microphone": [
+            "*"
+        ]
+    },
     "entryPoints": [
         {
             "type": "panel",
             "id": "panel1",
             "main": "index.html",
-            "documentSandbox": "sandbox/code.js"
+            "documentSandbox": "sandbox/code.js",
+            "permissions": {
+
+                "sandbox": ["allow-popups"]
+
+                "microphone": "*"
+
+            }
         }
     ]
 }
