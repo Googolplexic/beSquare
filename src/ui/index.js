@@ -38,8 +38,9 @@ addOnUISdk.ready.then(async () => {
     const gptsubmit = document.getElementById("sendButton");
     gptsubmit.addEventListener("click", async event => {
         await chatWithAssistant(getValue(),globalcurrentThreadID);
-        console.log(getValue());
-        console.log(globalcurrentThreadID);
+        console.log("sent value = " + getValue());
+        console.log("current thread = " + globalcurrentThreadID);
+        inputElement.value = "";
     });
 
     
