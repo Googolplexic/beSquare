@@ -14,11 +14,32 @@ addOnUISdk.ready.then(async () => {
         await scriptApi.createRectangle();
     });
 
-    const gptTranscript = document.getElementById("gpttranslate");
+    const gptTranscript = document.getElementById("initAssistant");
+    let globalcurrentThreadID = "";
     gptTranscript.addEventListener("click", async event => {
-        //await scriptApi.poop();
-        const repon = await callOpenAI("how's the weather?");
-        console.log(repon);
+        const threadID = await initializeThread();
+        console.log(threadID);
+        globalcurrentThreadID = threadID;
+    });
+
+    //gets value of userInput
+    const getValue = () => {
+        const inputElement = document.getElementById('userInput');
+        return inputElement.value;
+    };
+
+    //listen for changes in userInput
+    const inputElement = document.getElementById('userInput');
+    inputElement.addEventListener('input', (event) => {
+    const currentValue = event.target.value;
+    console.log('Input value:', currentValue);
+});
+
+    const gptsubmit = document.getElementById("sendButton");
+    gptsubmit.addEventListener("click", async event => {
+        await chatWithAssistant(getValue(),globalcurrentThreadID);
+        console.log(getValue());
+        console.log(globalcurrentThreadID);
     });
 
     
@@ -38,38 +59,46 @@ addOnUISdk.ready.then(async () => {
         }
     });
 
-    async function callOpenAI(userPrompt) {
-        try {
-            const response = await fetch('http://localhost:3000/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    prompt: userPrompt 
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!data.success) {
-                throw new Error(data.error || 'Unknown error occurred');
+    async function initializeThread() {
+        const response = await fetch('http://localhost:3000/api/thread', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             }
-            
-            return data.response;
-        } catch (error) {
-            console.error('Error calling OpenAI:', error);
-            throw error;
-        }
+        });
+        
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error);
+        return data.threadId;
     }
     
-    // // Example usage:
-    // try {
-    //     const response = await callOpenAI("Tell me a joke about programming");
-    //     console.log(response);
-    // } catch (error) {
-    //     console.error("Failed to get response:", error);
-    // }
+    async function sendMessage(threadId, message) {
+        const response = await fetch('http://localhost:3000/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                threadId,
+                message
+            })
+        });
+        
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error);
+        return data.response;
+    }
+    
+    // Example usage:
+    async function chatWithAssistant(inputm,threadid) {
+        try {
+
+            const resp = await sendMessage(threadid,inputm);
+            console.log('Assistant: ', resp);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
     // Enable the button only when:
     // 1. addOnUISdk is ready,
     // 2. scriptApi is available, and
