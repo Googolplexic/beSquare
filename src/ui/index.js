@@ -71,8 +71,49 @@ addOnUISdk.ready.then(async () => {
     });
     microphoneButton.disabled = false;
 
+
+
+    const ws = new WebSocket('ws://localhost:5001');
+
+    // WebSocket message handler
+    ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        if (data.message === 'invokeFunction') {
+            const { functionName, params } = data;
+            console.log(`Invoking function ${functionName} with params:`);
+            // Check if the function exists in scriptApi and invoke it
+            if (typeof scriptApi[functionName] === 'function') {
+                console.log("Match found")
+                console.log(params);
+                scriptApi[functionName](...Object.values(params));
+            } else {
+                console.error(`Function ${functionName} does not exist on scriptApi`);
+            }
+        }
+    };
+
+    ws.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
+
+    ws.onclose = () => {
+        console.log('Disconnected from WebSocket server');
+    };
+
+    // Define the function to be called with parameters
+    function myClientFunction(num, str) {
+        console.log(`Client function invoked! Params: num=${num}, str=${str}`);
+    }
+
+
+
+
+    
+
     const gptTranscript = document.getElementById("initThread");
     //make thread
+
     let globalcurrentThreadID = "";
     globalcurrentThreadID = initializeThread();
     
