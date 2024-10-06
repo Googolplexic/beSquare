@@ -21,7 +21,46 @@ function start() {
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
-        }
+        },
+        createEllipse: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
+            const ellipse = editor.createEllipse();
+            // Define ellipse dimensions.
+            ellipse.radiusX = width / 2;
+            ellipse.radiusY = height / 2;
+            // Define ellipse position.
+            ellipse.translation = { x: xLocation, y: yLocation };
+            // Fill the ellipse with the color.
+            const ellipseFill = editor.makeColorFill({red, green, blue, alpha});
+            ellipse.fill = ellipseFill;
+            // Add the ellipse to the document.
+            const insertionParent = editor.context.insertionParent;
+            insertionParent.children.append(ellipse);
+        },  
+        createLine: (xStart, yStart, xEnd, yEnd, {red, green, blue, alpha }) => {
+            const line = editor.createLine();
+            // Define line start and end points.
+            line.start = { x: xStart, y: yStart };
+            line.end = { x: xEnd, y: yEnd };
+            // Define line stroke.
+            const lineStroke = editor.makeColorStroke({red, green, blue, alpha});
+            line.stroke = lineStroke;
+            // Add the line to the document.
+            const insertionParent = editor.context.insertionParent;
+            insertionParent.children.append(line);
+        },
+        createText: (text, xLocation, yLocation, {red, green, blue, alpha }) => {
+            const textNode = editor.createText();
+            // Set the text content.
+            textNode.text = text;
+            // Define text position.
+            textNode.translation = { x: xLocation, y: yLocation };
+            // Set the text color.
+            const textColor = editor.makeColorFill({red, green, blue, alpha});
+            textNode.fill = textColor;
+            // Add the text to the document.
+            const insertionParent = editor.context.insertionParent;
+            insertionParent.children.append(textNode);
+        },
 
         
     };
