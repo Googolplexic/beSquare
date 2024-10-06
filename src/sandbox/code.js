@@ -51,13 +51,13 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(ellipse);
         },  
-        createLine: (xStart, yStart, xEnd, yEnd, color) => {
+        createLine: (xStart, yStart, xEnd, yEnd, width, color) => {
             const line = editor.createLine();
             // Define line start and end points.
             line.start = { x: xStart, y: yStart };
             line.end = { x: xEnd, y: yEnd };
             // Define line stroke.
-            const stroke = editor.makeStroke({ color, width: 2 });
+            const stroke = editor.makeStroke({ color, width: width });
             line.stroke = stroke;
             // Add the line to the document.
             const insertionParent = editor.context.insertionParent;
