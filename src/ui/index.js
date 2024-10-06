@@ -85,6 +85,4 @@ addOnUISdk.ready.then(async () => {
     // 3. click event listener is registered.
     createRectangleButton.disabled = false;
     microphoneButton.disabled = false;
-    startButton.disabled = false;
-    stopButton.disabled = false;
 });
