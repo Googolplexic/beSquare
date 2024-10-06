@@ -36,7 +36,7 @@ async function initializeAssistant() {
                 name: "Adobe Express Helper",
                 instructions: "You are a helpful assistant named Doug integrated with Adobe Express. You help users with their creative tasks and queries. You will help the user \
                 create and change shapes and elements, add text, and create diagrams and images using simple shapes. Use tools available to you to accomplish tasks",
-                model: "gpt-4o-mini",
+                model: "gpt-4o",
                 tools: tools
             });
             ASSISTANT_ID = assistant.id;

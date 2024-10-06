@@ -24,7 +24,7 @@ addOnUISdk.ready.then(async () => {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 console.log('Microphone access granted', stream);
                 microphoneButton.setAttribute("isOn", "true");
-                microphoneButton.textContent = "Process Voice";
+                microphoneButton.textContent = "Finish Voice Command";
 
                 // Start recording
                 mediaRecorder = new MediaRecorder(stream);
@@ -56,7 +56,7 @@ addOnUISdk.ready.then(async () => {
                     console.log('Microphone access deactivated');
                 }
                 microphoneButton.setAttribute("isOn", "false");
-                microphoneButton.textContent = "Voice Command";
+                microphoneButton.textContent = "Start Voice Command";
 
             } catch (error) {
                 console.error('Microphone access cannot be turned off', error);
@@ -133,7 +133,7 @@ addOnUISdk.ready.then(async () => {
         try {
             isWaitingForResponse = true;
             gptsubmit.disabled = true; // Disable the button
-            gptsubmit.textContent = "Sending..."; // Optional: update button text
+            gptsubmit.textContent = "Loading..."; // Optional: update button text
 
             await chatWithAssistant(getValue(), globalcurrentThreadID);
             console.log("sent value = " + getValue());
