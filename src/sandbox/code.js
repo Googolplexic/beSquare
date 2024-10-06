@@ -113,29 +113,26 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);
         },
-        setSelectionObjectColorFill: ({ red, green, blue, alpha }) => {
+        setSelectedFillColor: ( red, green, blue, alpha ) => {
+            console.log("Setting fill color for selected objects.");
+            console.log("red", red);
+            console.log("green", green);
+            console.log("blue", blue);
+            console.log("alpha", alpha);
             // Ensure there is a selection
             if (editor.context.hasSelection) {
                 const selectedNodes = editor.context.selection;
                 // Loop through the selected nodes
                 selectedNodes.forEach(node => {
-                    // Check if the node is a rectangle
-                    console.log("Good so far??");
-                    if (node.type) {
-                        console.log("Good so far");
-                        // Create a new color (e.g., red)
-                        console.log("Good so far");
+                    // Check if the node is fillable
+                    if (node.fill !== undefined) {
                         const newFill = editor.makeColorFill({ red, green, blue, alpha });
-                        console.log("Good so far");
-                        // Create a fill with the new color
-
-                        // Apply the new fill to the rectangle
+                        console.log("new fill", newFill);
+                        // Apply the new fill to the fillable object
                         node.fill = newFill;
-
-                        console.log(`Updated rectangle ${node.id} fill to red.`);
+                        console.log(`Updated fillable object ${node.id} fill color.`);
                     } else {
-                        console.log("Good so far??");
-                        console.log(`Node ${node.id} is not a rectangle.`);
+                        console.log(`Node ${node.id} is not fillable.`);
                     }
                 });
             } else {
@@ -157,20 +154,12 @@ function start() {
                 console.log("No nodes selected.");
             }
         },
-        setFontSize: (textNode, size) => {
-            textNode.characterStyle.fontSize = size;
-        },
-        setFont: (textNode, font) => {
-            textNode.characterStyle.font = font;
-        },
+
         setObjectStroke: (object, color) => {
             const stroke = editor.makeStroke({ color, width: 2 });
             object.stroke = stroke;
         },
 
-        setObjectAsSelected: (object) => {
-            editor.context.selection = object;
-        },
         addNewPage: (pageWidth, pageHeight, color) => {
             console.log("Creating a new page with the specified width, height, and background color.");
             try {

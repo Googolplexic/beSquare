@@ -239,7 +239,7 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_page",
-            "description": "Creates a new page or canvas with specified width, height, and an  background color. If no background color is provided, create the page with default as white. Do not call this function unless explicity told to create a new page.",
+            "description": "Do not call this function unless explicity told to create a new page.Creates a new page or canvas with specified width, height, and an  background color. If no background color is provided, create the page with default as white.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -355,9 +355,61 @@ const tools = [
                 "required": ["angle"],
                 "additionalProperties": false,
             }
-
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "set_selected_fill_color",
+            "description": "Sets the fill color of selected fillable objects in the editor.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "red": {
+                        "type": "number",
+                        "description": "The red component of the color (0-1)",
+                        "minimum": 0,
+                        "maximum": 1
+                    },
+                    "green": {
+                        "type": "number",
+                        "description": "The green component of the color (0-1)",
+                        "minimum": 0,
+                        "maximum": 1
+                    },
+                    "blue": {
+                        "type": "number",
+                        "description": "The blue component of the color (0-1)",
+                        "minimum": 0,
+                        "maximum": 1
+                    },
+                    "alpha": {
+                        "type": "number",
+                        "description": "The alpha (opacity) component of the color (0-1)",
+                        "minimum": 0,
+                        "maximum": 1
+                    }
+                },
+                "required": ["red", "green", "blue", "alpha"]
+            }
         }
-
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "set_selection_text_content",
+            "description": "Sets the content of selected text objects in the editor.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string",
+                        "description": "The new text content to set for the text objects"
+                    }
+                },
+                "required": ["content"]
+            }
+        }
     }
 ];
 
@@ -424,5 +476,17 @@ function rotate_selected(angle) {
     sendMessage(command, params);
     return `Rotated all selected items by ${angle} degrees around the centre`;
 }
+function set_selected_fill_color(red, green, blue, alpha) {
+    const command = 'setSelectedFillColor';
+    const params = { red, green, blue, alpha };
+    sendMessage(command, params);
+    return `Set all selected items' fill color to RGBA(${red}, ${green}, ${blue}, ${alpha})`;
+}
+function set_selection_text_content(content) {
+    const command = 'setSelectionTextContent';
+    const params = { content };
+    sendMessage(command, params);
+    return `Set the content of selected text objects to "${content}"`;
+}
 
-module.exports = { tools, create_rectangle, create_line, create_ellipse, create_text, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected };
+module.exports = { tools, create_rectangle, create_line, create_ellipse, create_text, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected, set_selected_fill_color, set_selection_text_content };
