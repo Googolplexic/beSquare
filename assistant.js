@@ -182,7 +182,7 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_text",
-            "description": "Creates a text element on the page at a certain location, and of a certain color. The angle parameter will rotate the text and should default to 0 if not provided in prompt.",
+            "description": "Creates a text element on the page at a certain location. The angle parameter will rotate the text and should default to 0 if not provided in prompt.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -201,36 +201,9 @@ const tools = [
                     "angle": {
                         "type": "number",
                         "description": "Angle in degrees to rotate the text."
-                    },
-                    "color": {
-                        "type": "object",
-                        "properties": {
-                            "red": {
-                                "type": "number",
-                                "description": "Red component of the color (0 to 1)."
-                            },
-                            "green": {
-                                "type": "number",
-                                "description": "Green component of the color (0 to 1)."
-                            },
-                            "blue": {
-                                "type": "number",
-                                "description": "Blue component of the color (0 to 1)."
-                            },
-                            "alpha": {
-                                "type": "number",
-                                "description": "Alpha component of the color (0 for transparent to 1 for opaque)."
-                            }
-                        },
-                        "required": ["red", "green", "blue", "alpha"],
-                        "additionalProperties": false
-                    },
-                    "size": {
-                        "type": "integer",
-                        "description": "fontSize"
                     }
                 },
-                "required": ["text", "xLocation", "yLocation", "angle", "color", "size"],
+                "required": ["text", "xLocation", "yLocation", "angle"],
                 "additionalProperties": false
             }
         }
@@ -428,11 +401,11 @@ function create_ellipse(width, height, xLocation, yLocation, angle, color) {
     return `Created a ellipse with  dimensions ${width}x${height} at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and rotated by ${angle} degrees`;
 }
 
-function create_text(text, xLocation, yLocation, angle, color, size) {
+function create_text(text, xLocation, yLocation, angle) {
     const command = 'createText';
-    const params = { text, xLocation, yLocation, angle, color, size };
+    const params = { text, xLocation, yLocation, angle};
     sendMessage(command, params);
-    return `Created text with content "${text}" at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and rotated by ${angle} degrees`;
+    return `Created text with content "${text}" at position (${xLocation}, ${yLocation}) and rotated by ${angle} degrees`;
 }
 
 function create_line(xStart, yStart, xEnd, yEnd, width, color) {

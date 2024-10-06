@@ -197,7 +197,7 @@ async function processToolCalls(toolCalls) {
                     output = await rotate_selected(parsedArgs.angle);
                     break;
                 case 'create_text':
-                    output = await create_text(parsedArgs.text, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.angle, parsedArgs.color, parsedArgs.size);
+                    output = await create_text(parsedArgs.text, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.angle);
                     break;
                 case 'set_selected_fill_color':
                     output = await set_selected_fill_color(parsedArgs.red, parsedArgs.green, parsedArgs.blue, parsedArgs.alpha);

@@ -231,24 +231,4 @@ addOnUISdk.ready.then(async () => {
         }
     }
 
-    //usage in adobe express add-on:
-    // wraps transcribe audio to accept webm blobs instead of files
-    async function handleAudioTranscription(webmBlob) {
-        try {
-            // Create a File object from the Blob if needed
-            const webmFile = new File([webmBlob], 'audio.webm', {
-                type: 'audio/webm'
-            });
-
-            const transcription = await transcribeAudio(webmFile);
-            console.log('Transcription:', transcription);
-
-            // Do something with the transcription...
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-
 });
