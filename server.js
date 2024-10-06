@@ -29,7 +29,6 @@ let ASSISTANT_ID;
 
 // Initialize the assistant
 async function initializeAssistant() {
-    console.log("tools, ", tools);
     try {
         // Create a new assistant if ASSISTANT_ID is not provided in env
         if (!process.env.ASSISTANT_ID) {
@@ -230,6 +229,7 @@ async function waitForRunCompletion(threadId, runId) {
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
         runStatus = await openai.beta.threads.runs.retrieve(threadId, runId);
 
+        // deals with function calling 
         if (runStatus.status === 'requires_action') {
             const requiredAction = runStatus.required_action;
             if (requiredAction.type === 'submit_tool_outputs') {
