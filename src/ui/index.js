@@ -9,7 +9,7 @@ addOnUISdk.ready.then(async () => {
     // to call the APIs defined in the Script runtime
     // i.e., in the code.js file of this add-on.
     const scriptApi = await runtime.apiProxy("script");
-    
+
     const createRectangleButton = document.getElementById("createRectangle");
     createRectangleButton.addEventListener("click", async event => {
         scriptApi.createRectangle({ red: 1, green: 0, blue: 1, alpha: 1 });
@@ -84,7 +84,7 @@ addOnUISdk.ready.then(async () => {
             console.log(`Invoking function ${functionName} with params:`);
             // Check if the function exists in scriptApi and invoke it
             if (typeof scriptApi[functionName] === 'function') {
-                console.log("Match found")
+                console.log("Match found");
                 console.log(params);
                 scriptApi[functionName](...Object.values(params));
             } else {
@@ -109,14 +109,14 @@ addOnUISdk.ready.then(async () => {
 
 
 
-    
+
 
     const gptTranscript = document.getElementById("initThread");
     //make thread
 
     let globalcurrentThreadID = "";
     globalcurrentThreadID = initializeThread();
-    
+
     gptTranscript.addEventListener("click", async event => {
         const threadID = await initializeThread();
         console.log(threadID);
@@ -132,24 +132,52 @@ addOnUISdk.ready.then(async () => {
     //listen for changes in userInput
     const inputElement = document.getElementById('userInput');
     inputElement.addEventListener('input', (event) => {
-    const currentValue = event.target.value;
-    console.log('Input value:', currentValue);
-});
+        const currentValue = event.target.value;
+        console.log('Input value:', currentValue);
+    });
 
     const gptsubmit = document.getElementById("sendButton");
+    let isWaitingForResponse = false;
+
     gptsubmit.addEventListener("click", async event => {
-        await chatWithAssistant(getValue(),globalcurrentThreadID);
-        console.log("sent value = " + getValue());
-        console.log("current thread = " + globalcurrentThreadID);
-        inputElement.value = "";
+        if (isWaitingForResponse) return; // Prevent multiple clicks while waiting
+
+        try {
+            isWaitingForResponse = true;
+            gptsubmit.disabled = true; // Disable the button
+            gptsubmit.textContent = "Sending..."; // Optional: update button text
+
+            await chatWithAssistant(getValue(), globalcurrentThreadID);
+            console.log("sent value = " + getValue());
+            console.log("current thread = " + globalcurrentThreadID);
+            inputElement.value = "";
+        } catch (error) {
+            console.error("Error in chat:", error);
+            // Optionally display error to user
+        } finally {
+            isWaitingForResponse = false;
+            gptsubmit.disabled = false;
+            gptsubmit.textContent = "Send"; // Reset button text
+        }
     });
+
+    async function chatWithAssistant(inputm, threadid) {
+        try {
+            const response = await sendMessage(threadid, inputm);
+            console.log('Assistant: ', response);
+            // Update UI with response
+        } catch (error) {
+            console.error("Error:", error);
+            throw error; // Rethrow to be caught in the click handler
+        }
+    }
 
     const cancelsel = document.getElementById("discardCommand");
     cancelsel.addEventListener("click", async event => {
         inputElement.value = "";
     });
 
-    
+
     // Select the file input and audio player elements
     // const fileInput = document.getElementById('fileInput');
     // const audioPlayer = document.getElementById('audioPlayer');
@@ -173,12 +201,12 @@ addOnUISdk.ready.then(async () => {
                 'Content-Type': 'application/json',
             }
         });
-        
+
         const data = await response.json();
         if (!data.success) throw new Error(data.error);
         return data.threadId;
     }
-    
+
     async function sendMessage(threadId, message) {
         const response = await fetch('http://localhost:3001/api/chat', {
             method: 'POST',
@@ -190,17 +218,17 @@ addOnUISdk.ready.then(async () => {
                 message
             })
         });
-        
+
         const data = await response.json();
         if (!data.success) throw new Error(data.error);
         return data.response;
     }
-    
+
     // Example usage:
-    async function chatWithAssistant(inputm,threadid) {
+    async function chatWithAssistant(inputm, threadid) {
         try {
 
-            const resp = await sendMessage(threadid,inputm);
+            const resp = await sendMessage(threadid, inputm);
             console.log('Assistant: ', resp);
         } catch (error) {
             console.error("Error:", error);
@@ -212,27 +240,27 @@ addOnUISdk.ready.then(async () => {
             // Create FormData and append the file
             const formData = new FormData();
             formData.append('audio', webmFile);
-    
+
             // Send the request
             const response = await fetch('http://localhost:3001/api/transcribe', {
                 method: 'POST',
                 body: formData
             });
-    
+
             const data = await response.json();
-            
+
             if (!data.success) {
                 throw new Error(data.error);
             }
-    
+
             return data.transcription;
-    
+
         } catch (error) {
             console.error('Transcription failed:', error);
             throw error;
         }
     }
-    
+
     //usage in adobe express add-on:
     async function handleAudioTranscription(webmBlob) {
         try {
@@ -240,12 +268,12 @@ addOnUISdk.ready.then(async () => {
             const webmFile = new File([webmBlob], 'audio.webm', {
                 type: 'audio/webm'
             });
-    
+
             const transcription = await transcribeAudio(webmFile);
             console.log('Transcription:', transcription);
-            
+
             // Do something with the transcription...
-            
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -254,7 +282,7 @@ addOnUISdk.ready.then(async () => {
     // 1. addOnUISdk is ready,
     // 2. scriptApi is available, and
     // 3. click event listener is registered.
-    
+
     //gptTranscript.disabled = false;
-   
+
 });

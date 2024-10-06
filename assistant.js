@@ -61,6 +61,7 @@ function create_rectangle(width, height, xLocation, yLocation, color) {
     const command = 'createRectangle';
     const params = { width, height, xLocation, yLocation, color };
     sendMessage(command, params);
+    return `Created a rectangle with dimensions ${width}x${height} at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
 }
 
 module.exports = { tools, create_rectangle };
