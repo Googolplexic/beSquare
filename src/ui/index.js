@@ -67,7 +67,7 @@ addOnUISdk.ready.then(async () => {
     microphoneButton.disabled = false;
 
 
-
+    // websocket for functions called by LLM on the server side
     const ws = new WebSocket('ws://localhost:5001');
 
     // WebSocket message handler
@@ -105,9 +105,8 @@ addOnUISdk.ready.then(async () => {
     const readly = document.getElementById("readOnly");
 
 
-
-    const gptTranscript = document.getElementById("initThread");
     //make thread
+    const gptTranscript = document.getElementById("initThread");
 
     let globalcurrentThreadID = "";
     globalcurrentThreadID = await initializeThread();
@@ -157,10 +156,13 @@ addOnUISdk.ready.then(async () => {
     });
 
     async function chatWithAssistant(inputm, threadid) {
+        // include page size data in assistant call to enable understanding terms like "middle" and
+        //  right.
         const pageWidth = await scriptApi.getPageWidth();
         const pageHeight = await scriptApi.getPageHeight();
         inputm = inputm + " The current page width is" + pageWidth + " and the page height is" + pageHeight;
         try {
+
             const response = await sendMessage(threadid, inputm);
             console.log('Assistant: ', response);
             // Update UI with response
@@ -173,6 +175,7 @@ addOnUISdk.ready.then(async () => {
 
     const cancelsel = document.getElementById("discardCommand");
     cancelsel.addEventListener("click", async event => {
+        // empties the input
         inputElement.value = "";
     });
 
@@ -219,13 +222,13 @@ addOnUISdk.ready.then(async () => {
                 method: 'POST',
                 body: formData
             });
-
+            // get response
             const data = await response.json();
 
             if (!data.success) {
                 throw new Error(data.error);
             }
-
+            // return text transcription of the audio
             return data.transcription;
 
         } catch (error) {
