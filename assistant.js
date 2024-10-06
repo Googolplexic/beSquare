@@ -123,7 +123,10 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_ellipse",
-            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height of the ellipse in pixels, the x and y coordinates, a rotation angle, and an RGBA color value. If only one size value is given, then assume circle and have same width and height. The rotation amount is in degrees and rotates the ellipse around its center. 0 should be the default rotation amount.",
+            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height \
+            of the ellipse in pixels, the x and y coordinates of the center, a rotation angle, and an RGBA color value. If \
+            only one size value is given, then assume circle and have same width and height. The rotation amount is in degrees \
+            and rotates the ellipse around its center. 0 should be the default rotation amount.",
             "parameters": {
                 "type": "object",
                 "properties": {

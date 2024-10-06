@@ -29,13 +29,13 @@ let ASSISTANT_ID;
 
 // Initialize the assistant
 async function initializeAssistant() {
-    console.log("tools, ", tools);
     try {
         // Create a new assistant if ASSISTANT_ID is not provided in env
         if (!process.env.ASSISTANT_ID) {
             const assistant = await openai.beta.assistants.create({
                 name: "Adobe Express Helper",
-                instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries. Use tools available to you to accomplish task.",
+                instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries. You will help the user \
+                create and change shapes and elements, add text, and create diagrams and images using simple shapes. Use tools available to you to accomplish tasks",
                 model: "gpt-4o-mini",
                 tools: tools
             });
@@ -99,11 +99,12 @@ app.post('/api/chat', async (req, res) => {
 
         while (retryCount < maxRetries) {
             runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
-
+            // nothing more for it to do
             if (runStatus.status === 'completed') {
                 break;
             } else if (runStatus.status === 'failed') {
                 throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
+            // LLM response invokes some function through function-calling
             } else if (runStatus.status === 'requires_action') {
                 const requiredAction = runStatus.required_action;
                 if (requiredAction.type === 'submit_tool_outputs') {
@@ -166,6 +167,7 @@ async function processToolCalls(toolCalls) {
         console.log(`Processing tool call: ${name} with arguments: ${args}`); // Log tool call details
 
         try {
+            // call the appropriate function, (cannot be called directly due to websockets implementation and )
             const parsedArgs = JSON.parse(args);
 
             switch (name) {
@@ -233,6 +235,7 @@ async function waitForRunCompletion(threadId, runId) {
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
         runStatus = await openai.beta.threads.runs.retrieve(threadId, runId);
 
+        // deals with function calling 
         if (runStatus.status === 'requires_action') {
             const requiredAction = runStatus.required_action;
             if (requiredAction.type === 'submit_tool_outputs') {

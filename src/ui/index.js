@@ -96,12 +96,6 @@ addOnUISdk.ready.then(async () => {
         console.log('Disconnected from WebSocket server');
     };
 
-    // Define the function to be called with parameters
-    function myClientFunction(num, str) {
-        console.log(`Client function invoked! Params: num=${num}, str=${str}`);
-    }
-
-
     const readly = document.getElementById("readOnly");
 
 
