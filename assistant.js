@@ -26,7 +26,7 @@ tools= [
                     color: {
                         type: "array",
                         items: { type: "integer" },
-                        description: "Array containing the red, green, blue, and alpha values that define the rectangle color in the format [red, green, blue, alpha].",
+                        description: "Array containing the red, green, blue, and alpha values that define the rectangle color in the format [red, green, blue, alpha] where all componenets are between 0 and 1.",
                     },
                 },
                 required: ["width", "height", "xLocation", "yLocation", "color"],
