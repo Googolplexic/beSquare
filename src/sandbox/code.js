@@ -99,15 +99,16 @@ function start() {
 
             // Set the text content
             textNode.fullContent.text = text;
+            console.log("textnode, ", textNode);
 
             // Set the position of the text
             textNode.setPositionInParent({ x: xLocation, y: yLocation }, { x: 0, y: 0 });
             textNode.setRotationInParent(angle, { x: 0, y: 0 });
 
             // Set the font size
-            textNode.characterStyles.fontSize = fontSize;
+            textNode.size = 12;
 
-            textNode.characterStyles.color = color;
+            textNode.color = color;
             // Add the text to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);

@@ -176,6 +176,61 @@ const tools = [
             }
         }
     },
+
+    
+    {
+        "type": "function",
+        "function": {
+            "name": "create_text",
+            "description": "creates a text element on the page at a certain location, and of a certain color",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "content of the text element to be displayed"
+                    },
+                    "xLocation": {
+                        "type": "integer",
+                        "description": "X coordinate of the top left of the text (0,0 is the top left of the canvas grid)."
+                    },
+                    "yLocation": {
+                        "type": "integer",
+                        "description": "Y coordinate of the top left of the text (0,0 is the top left of the canvas grid)."
+                    },
+                    "color": {
+                        "type": "object",
+                        "properties": {
+                            "red": {
+                                "type": "number",
+                                "description": "Red component of the color (0 to 1)."
+                            },
+                            "green": {
+                                "type": "number",
+                                "description": "Green component of the color (0 to 1)."
+                            },
+                            "blue": {
+                                "type": "number",
+                                "description": "Blue component of the color (0 to 1)."
+                            },
+                            "alpha": {
+                                "type": "number",
+                                "description": "Alpha component of the color (0 for transparent to 1 for opaque)."
+                            }
+                        },
+                        "required": ["red", "green", "blue", "alpha"],
+                        "additionalProperties": false
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "fontSize"
+                    }
+                },
+                "required": ["text", "xLocation", "yLocation", "color", "size"],
+                "additionalProperties": false
+            }
+        }
+    },
     {
         "type": "function",
         "function": {
@@ -317,6 +372,12 @@ function create_ellipse(width, height, xLocation, yLocation, angle, color) {
     return `Created a ellipse with  dimensions ${width}x${height} at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and rotated by ${angle} degrees`;
 }
 
+function create_text(text, xLocation, yLocation, color, size) {
+    const command = 'createText';
+    const params = { text, xLocation, yLocation, color, size };
+    sendMessage(command, params);
+    return `Created text with content "$${text}" at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and size ${size}`;
+}
 
 function create_line(xStart, yStart, xEnd, yEnd, width, color) {
     const command = 'createLine';
@@ -360,4 +421,4 @@ function rotate_selected(angle) {
     return `Rotated all selected items by ${angle} degrees around the centre`;
 }
 
-module.exports = { tools, create_rectangle, create_line, create_ellipse, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected };
+module.exports = { tools, create_rectangle, create_line, create_ellipse, create_text, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected };
