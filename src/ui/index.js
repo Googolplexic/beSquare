@@ -110,7 +110,7 @@ addOnUISdk.ready.then(async () => {
     //make thread
 
     let globalcurrentThreadID = "";
-    globalcurrentThreadID = initializeThread();
+    globalcurrentThreadID = await initializeThread();
 
     gptTranscript.addEventListener("click", async event => {
         const threadID = await initializeThread();
