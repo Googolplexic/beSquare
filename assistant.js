@@ -119,7 +119,7 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_ellipse",
-            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height of the ellipse in pixels, the x and y coordinates for the top left corner, and an RGBA color value.",
+            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height of the ellipse in pixels, the x and y coordinates, and an RGBA color value. If only one size value is given, then assume circle and have same width and height. Top left is (0,0) circles placed in 'top left' be offset so circle is fully visible",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -133,11 +133,11 @@ const tools = [
                     },
                     "xLocation": {
                         "type": "integer",
-                        "description": "X coordinate of the top left corner of the ellipse on the canvas grid (0,0 is the top left)."
+                        "description": "X coordinate of the center the ellipse on the canvas grid (0,0 is the top left)."
                     },
                     "yLocation": {
                         "type": "integer",
-                        "description": "Y coordinate of the top left corner of the ellipse on the canvas grid (0,0 is the top left)."
+                        "description": "Y coordinate of the center of the ellipse on the canvas grid (0,0 is the top left)."
                     },
                     "color": {
                         "type": "object",

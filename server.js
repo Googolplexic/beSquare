@@ -177,7 +177,7 @@ async function processToolCalls(toolCalls) {
                     output = await create_line(parsedArgs.xStart, parsedArgs.yStart, parsedArgs.xEnd, parsedArgs.yEnd, parsedArgs.width, parsedArgs.color);
                     console.log("function complete");
                     break;
-                case 'created_ellipse':
+                case 'create_ellipse':
                     output = await create_ellipse(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
                     break;
                 // Add cases for other functions as needed
