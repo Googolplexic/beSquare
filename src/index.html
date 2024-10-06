@@ -47,13 +47,22 @@
         }
 
         .gif-container {
-            width: auto;
-            height: auto;
+            width: 200px;
+            height: 200px;
             background-image: url('https://media1.tenor.com/m/PmktnnCEfsMAAAAC/cmon-do-something-original-cmon.gif'); /* GIF URL */
-            background-size: cover;    /* Make the GIF cover the entire container */
+            background-size: contain;    /* Make the GIF cover the entire container */
             background-repeat: no-repeat;  /* Prevent the GIF from repeating */
             background-position: center;   /* Center the GIF inside the container */
         }
+        
+        .gif-container2 {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://media.tenor.com/bhTUK_efj8YAAAAi/microphone-master-gis.gif'); /* GIF URL */
+            background-size: contain;    /* Make the GIF cover the entire container */
+            background-repeat: no-repeat;  /* Prevent the GIF from repeating */
+        }
+
     </style>
 </head>
 
@@ -70,6 +79,8 @@
         <audio id="audio-output" controls autoplay></audio>
 
         <script type="module" src="ui/index.js"></script>
+
+        <div class="gif-container2"></div>
     </div>
 </body>
 
