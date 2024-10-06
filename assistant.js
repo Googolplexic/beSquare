@@ -7,7 +7,7 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_rectangle",
-            "description": "Draws a rectangle of a given size and color on the screen. It takes the width and height of the rectangle in pixels, the x and y coordinates for the top left corner, a rotation amount, and an RGBA color value. The rotation amount is in degrees and rotates the rectangle around its center. 0 should be the default rotation amount.",
+            "description": "Draws a rectangle of a given size and color on the screen. It takes the width and height of the rectangle in pixels, the x and y coordinates for the centre of the rectangle, a rotation amount, and an RGBA color value. The rotation amount is in degrees and rotates the rectangle around its center. 0 should be the default rotation amount.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -21,11 +21,11 @@ const tools = [
                     },
                     "xLocation": {
                         "type": "integer",
-                        "description": "X coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
+                        "description": "X coordinate of the centre of the rectangle on the canvas grid (0,0 is the top left)."
                     },
                     "yLocation": {
                         "type": "integer",
-                        "description": "Y coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
+                        "description": "Y coordinate of the centre of the rectangle on the canvas grid (0,0 is the top left)."
                     },
                     "angle": {
                         "type": "number",
@@ -171,7 +171,7 @@ const tools = [
                         "additionalProperties": false
                     }
                 },
-                "required": ["width", "height", "xLocation", "yLocation", "color"],
+                "required": ["width", "height", "xLocation", "yLocation", "angle", "color"],
                 "additionalProperties": false
             }
         }
@@ -403,7 +403,7 @@ function create_ellipse(width, height, xLocation, yLocation, angle, color) {
 
 function create_text(text, xLocation, yLocation, angle) {
     const command = 'createText';
-    const params = { text, xLocation, yLocation, angle};
+    const params = { text, xLocation, yLocation, angle };
     sendMessage(command, params);
     return `Created text with content "${text}" at position (${xLocation}, ${yLocation}) and rotated by ${angle} degrees`;
 }

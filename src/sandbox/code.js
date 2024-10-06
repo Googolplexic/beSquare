@@ -52,8 +52,8 @@ function start() {
                 rectangle.width = width;
                 rectangle.height = height;
 
-                // Define rectangle position
-                rectangle.translation = { x: xLocation, y: yLocation };
+                // Define rectangle position to center it
+                rectangle.translation = { x: xLocation - width / 2, y: yLocation - height / 2 };
                 rectangle.setRotationInParent(angle, { x: rectangle.width / 2, y: rectangle.height / 2 });
 
                 // Fill the rectangle with the color passed in the `color` object
