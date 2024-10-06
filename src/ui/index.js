@@ -103,7 +103,7 @@ addOnUISdk.ready.then(async () => {
     }
 
 
-
+    const readly = document.getElementById("readOnly");
 
 
 
@@ -162,6 +162,7 @@ addOnUISdk.ready.then(async () => {
             const response = await sendMessage(threadid, inputm);
             console.log('Assistant: ', response);
             // Update UI with response
+            readly.textContent = response;
         } catch (error) {
             console.error("Error:", error);
             throw error; // Rethrow to be caught in the click handler
@@ -173,22 +174,6 @@ addOnUISdk.ready.then(async () => {
         inputElement.value = "";
     });
 
-
-    // Select the file input and audio player elements
-    // const fileInput = document.getElementById('fileInput');
-    // const audioPlayer = document.getElementById('audioPlayer');
-
-    // // Listen for changes on the file input
-    // fileInput.addEventListener('change', (event) => {
-    //     const file = event.target.files[0]; // Get the first selected file
-    //     if (file && file.type == "audio/mpeg") { // Ensure the file is an MP3
-    //         console.log(file.type);
-    //         const fileURL = URL.createObjectURL(file); // Create a URL for the file
-    //         audioPlayer.src = fileURL; // Set the audio player source to the file
-    //     } else {
-    //         alert('Please upload a valid MP3 file.');
-    //     }
-    // });
 
     async function initializeThread() {
         const response = await fetch('http://localhost:3001/api/thread', {
@@ -220,16 +205,6 @@ addOnUISdk.ready.then(async () => {
         return data.response;
     }
 
-    // Example usage:
-    async function chatWithAssistant(inputm, threadid) {
-        try {
-
-            const resp = await sendMessage(threadid, inputm);
-            console.log('Assistant: ', resp);
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }
 
     async function transcribeAudio(webmFile) {
         try {
@@ -274,11 +249,6 @@ addOnUISdk.ready.then(async () => {
             console.error('Error:', error);
         }
     }
-    // Enable the button only when:
-    // 1. addOnUISdk is ready,
-    // 2. scriptApi is available, and
-    // 3. click event listener is registered.
 
-    //gptTranscript.disabled = false;
 
 });
