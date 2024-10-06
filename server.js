@@ -6,10 +6,17 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 const { tools } = require('./assistant');
-
+const WebSocket = require('ws');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;    // Port for HTTP server
+const portWs = process.env.PORTWS || 5001; // Port for WebSocket server
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Initialize OpenAI with your API key
 const openai = new OpenAI({
@@ -18,8 +25,6 @@ const openai = new OpenAI({
 
 // Store the assistant ID after creation
 let ASSISTANT_ID;
-
-
 
 // Initialize the assistant
 async function initializeAssistant() {
@@ -30,7 +35,7 @@ async function initializeAssistant() {
                 name: "Adobe Express Helper",
                 instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries.",
                 model: "gpt-4o-mini",
-                tools: []
+                tools: tools
             });
             ASSISTANT_ID = assistant.id;
             console.log('Created new assistant with ID:', ASSISTANT_ID);
@@ -56,15 +61,15 @@ app.use(cors({
 app.post('/api/thread', async (req, res) => {
     try {
         const thread = await openai.beta.threads.create();
-        res.json({ 
-            success: true, 
-            threadId: thread.id 
+        res.json({
+            success: true,
+            threadId: thread.id
         });
     } catch (error) {
         console.error('Error creating thread:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -94,7 +99,7 @@ app.post('/api/chat', async (req, res) => {
 
         // Poll for the run completion
         let runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
-        
+
         // Wait for the run to complete (with timeout)
         const startTime = Date.now();
         const timeout = 30000; // 30 seconds timeout
@@ -114,7 +119,7 @@ app.post('/api/chat', async (req, res) => {
 
         // Get the messages (including the assistant's response)
         const messages = await openai.beta.threads.messages.list(threadId);
-        
+
         // Get the latest assistant message
         const assistantMessage = messages.data
             .filter(msg => msg.role === 'assistant')
@@ -138,7 +143,7 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-//english language transcription
+// English language transcription
 // Configure multer for file upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -219,12 +224,36 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
     }
 });
 
-// Initialize the assistant and start the server
+// Initialize the assistant and WebSocket server, then start the HTTP server
 initializeAssistant()
     .then(() => {
+        // Only call listen once after everything is initialized
         app.listen(port, () => {
-            console.log(`Server running on port ${port}`);
+            console.log(`HTTP server running on port ${port}`);
         });
+
+        // Start WebSocket server on `portWs`
+        const wss = new WebSocket.Server({ port: portWs });
+
+        wss.on('connection', (ws) => {
+            console.log('Client connected');
+
+            // Send a message to invoke a client function with parameters
+            const functionName = 'createRectangle';
+            const params = [100, 200, 100, 200, { red: 1, green: 0, blue: 0, alpha: 1 }];
+
+            ws.send(JSON.stringify({
+                message: 'invokeFunction',
+                functionName: functionName,
+                params: params
+            }));
+
+            ws.on('message', (message) => {
+                console.log(`Received message from client: ${message}`);
+            });
+        });
+
+        console.log(`WebSocket server running on port ${portWs}`);
     })
     .catch(error => {
         console.error('Failed to start server:', error);
