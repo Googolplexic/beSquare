@@ -80,48 +80,52 @@ app.post('/api/chat', async (req, res) => {
     try {
         const { threadId, message } = req.body;
 
-        if (!threadId || !message) {
-            return res.status(400).json({
-                success: false,
-                error: 'Missing threadId or message in request body'
-            });
-        }
-
         // Add the user's message to the thread
         await openai.beta.threads.messages.create(threadId, {
             role: "user",
             content: message
         });
-        console.log("Message sent to API: ", message);
 
         // Create a run
         const run = await openai.beta.threads.runs.create(threadId, {
             assistant_id: ASSISTANT_ID
         });
 
-        // Poll for the run completion
-        let runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
+        // Poll for the run completion with exponential backoff
+        const maxRetries = 10;
+        let retryCount = 0;
+        let runStatus;
 
-        // Wait for the run to complete (with timeout)
-        const startTime = Date.now();
-        const timeout = 300000; // 30 seconds timeout
+        while (retryCount < maxRetries) {
+            runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
 
-        while (runStatus.status !== 'completed' && runStatus.status !== 'failed') {
-            if (Date.now() - startTime > timeout) {
-                throw new Error('Request timeout');
+            if (runStatus.status === 'completed') {
+                break;
+            } else if (runStatus.status === 'failed') {
+                throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
+            } else if (runStatus.status === 'requires_action') {
+                const requiredAction = runStatus.required_action;
+                if (requiredAction.type === 'submit_tool_outputs') {
+                    const toolCalls = requiredAction.submit_tool_outputs.tool_calls;
+                    const toolOutputs = await processToolCalls(toolCalls);
+                    await openai.beta.threads.runs.submitToolOutputs(threadId, run.id, {
+                        tool_outputs: toolOutputs
+                    });
+                }
             }
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
+
+            const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+            await new Promise(resolve => setTimeout(resolve, delay));
+            retryCount++;
         }
 
-        if (runStatus.status === 'failed') {
-            throw new Error('Assistant run failed');
+        if (retryCount === maxRetries) {
+            throw new Error('Max retries reached, request timed out');
         }
 
         // Get the messages (including the assistant's response)
         const messages = await openai.beta.threads.messages.list(threadId);
-        
 
         // Get the latest assistant message
         const assistantMessage = messages.data
@@ -139,12 +143,84 @@ app.post('/api/chat', async (req, res) => {
 
     } catch (error) {
         console.error('Error processing request:', error);
-        res.status(500).json({
+
+        // Check if it's an OpenAI API error
+        if (error.response && error.response.data) {
+            console.error('OpenAI API Error:', error.response.data);
+        }
+
+        res.status(error.status || 500).json({
             success: false,
-            error: error.message
+            error: error.message,
+            details: error.response?.data || 'No additional details available'
         });
     }
 });
+
+async function processToolCalls(toolCalls) {
+    return await Promise.all(toolCalls.map(async (toolCall) => {
+        const { name, arguments: args } = toolCall.function;
+        let output;
+
+        try {
+            const parsedArgs = JSON.parse(args);
+
+            switch (name) {
+                case 'create_rectangle':
+                    const { width, height, xLocation, yLocation, color } = parsedArgs;
+                    output = await create_rectangle(width, height, xLocation, yLocation, color);
+                    break;
+                // Add cases for other functions as needed
+                default:
+                    output = `Function ${name} not implemented`;
+            }
+        } catch (error) {
+            console.error(`Error processing tool call for ${name}:`, error);
+            output = `Error: ${error.message}`;
+        }
+
+        // Ensure output is always a string
+        return {
+            tool_call_id: toolCall.id,
+            output: typeof output === 'string' ? output : JSON.stringify(output)
+        };
+    }));
+}
+
+async function waitForRunCompletion(threadId, runId) {
+    let runStatus;
+    do {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+        runStatus = await openai.beta.threads.runs.retrieve(threadId, runId);
+
+        if (runStatus.status === 'requires_action') {
+            const requiredAction = runStatus.required_action;
+            if (requiredAction.type === 'submit_tool_outputs') {
+                const toolCalls = requiredAction.submit_tool_outputs.tool_calls;
+                const toolOutputs = await processToolCalls(toolCalls);
+
+                console.log('Submitting tool outputs:', toolOutputs); // Log for debugging
+
+                try {
+                    await openai.beta.threads.runs.submitToolOutputs(threadId, runId, {
+                        tool_outputs: toolOutputs
+                    });
+                } catch (error) {
+                    console.error('Error submitting tool outputs:', error);
+                    throw error; // Rethrow to be caught in the main error handler
+                }
+            }
+        }
+
+    } while (['in_progress', 'queued', 'requires_action'].includes(runStatus.status));
+
+    if (runStatus.status === 'failed') {
+        throw new Error(`Run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
+    }
+
+    return runStatus;
+}
+
 
 // English language transcription
 // Configure multer for file upload
