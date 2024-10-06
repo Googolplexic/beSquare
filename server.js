@@ -35,9 +35,6 @@ app.post('/api/convert-sound-to-text', async (req, res) => {
 });
 
 
-app.get('/api/function-caller', async (req, rel) => {
-
-});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
