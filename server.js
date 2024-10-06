@@ -264,7 +264,7 @@ initializeAssistant()
             // This function will be called when a client connects
             console.log('Client connected, now it\'s safe to call create_rectangle');
             // Example usage of create_rectangle
-            create_rectangle(100, 100, 100, 100, { red: 1, green: 0, blue: 0, alpha: 1 });
+            // create_rectangle(100, 100, 100, 100, { red: 1, green: 0, blue: 0, alpha: 1 });
         });
     })
     .catch(error => {
