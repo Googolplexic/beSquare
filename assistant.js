@@ -215,10 +215,10 @@ const tools = [
                     },
                     "size": {
                         "type": "integer",
-                        "description": "size of the text in pt"
+                        "description": "fontSize"
                     }
                 },
-                "required": ["text", "size", "xLocation", "yLocation", "color"],
+                "required": ["text", "xLocation", "yLocation", "color", "size"],
                 "additionalProperties": false
             }
         }
