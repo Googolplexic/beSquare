@@ -224,6 +224,33 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
     }
 });
 
+
+function sendMessage(command, params) {
+    const message = (JSON.stringify({
+        message: 'invokeFunction',
+        functionName: command,
+        params: params
+    }));
+    clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+}
+
+// Array to hold all connected clients
+let clients = [];
+
+// Function to register a new client
+function registerClient(ws) {
+    clients.push(ws);
+}
+
+// Function to remove a client when they disconnect
+function unregisterClient(ws) {
+    clients = clients.filter(client => client !== ws);
+}
+
 // Initialize the assistant and WebSocket server, then start the HTTP server
 initializeAssistant()
     .then(() => {
@@ -236,21 +263,16 @@ initializeAssistant()
         const wss = new WebSocket.Server({ port: portWs });
 
         wss.on('connection', (ws) => {
+            registerClient(ws);
             console.log('Client connected');
-
-            // Send a message to invoke a client function with parameters
-            const functionName = 'createRectangle';
-            const params = [100, 200, 100, 200, { red: 1, green: 0, blue: 0, alpha: 1 }];
-
-            ws.send(JSON.stringify({
-                message: 'invokeFunction',
-                functionName: functionName,
-                params: params
-            }));
 
             ws.on('message', (message) => {
                 console.log(`Received message from client: ${message}`);
             });
+        });
+        wss.on('close', () => {
+            console.log('Client disconnected');
+            unregisterClient(ws); // Unregister the client
         });
 
         console.log(`WebSocket server running on port ${portWs}`);
