@@ -3,6 +3,7 @@ import { editor } from "express-document-sdk";
 // Get the document sandbox runtime.
 const { runtime } = addOnSandboxSdk.instance;
 
+
 function start() {
     // APIs to be exposed to the UI runtime
     // i.e., to the index.html file of this add-on.
@@ -65,17 +66,49 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);
         },
+        setSelectionObjectColorFill: ({ red, green, blue, alpha }) => {
+            // Ensure there is a selection
+            if (editor.context.hasSelection) {
+                const selectedNodes = editor.context.selection;
+                // Loop through the selected nodes
+                selectedNodes.forEach(node => {
+                    // Check if the node is a rectangle
+                    console.log("Good so far??");
+                    if (node.type) {
+                        console.log("Good so far");
+                        // Create a new color (e.g., red)
+                        console.log("Good so far");
+                        const newFill = editor.makeColorFill({ red, green, blue, alpha });
+                        console.log("Good so far");
+                        // Create a fill with the new color
 
-        setObjectFillColor: (object, color) => {
-            const fill = editor.makeColorFill(color);
-            object.fill = fill;
+                        // Apply the new fill to the rectangle
+                        node.fill = newFill;
+
+                        console.log(`Updated rectangle ${node.id} fill to red.`);
+                    } else {
+                        console.log("Good so far??");
+                        console.log(`Node ${node.id} is not a rectangle.`);
+                    }
+                });
+            } else {
+                console.log("No nodes selected.");
+            }
         },
-        setTextContent: (textNode, text) => {
-            textNode.text = text;
-        },
-        setTextFillColor: (textNode, color) => {
-            const fill = editor.makeColorFill(color);
-            textNode.fill = fill;
+        setSelectionTextContent: (text) => {
+            if (editor.context.hasSelection) {
+                const selectedNodes = editor.context.selection;
+                selectedNodes.forEach(node => {
+                    if (node.type === "Text") {
+                        node.text = text;
+                        console.log(`Updated text ${node.id} content to ${text}.`);
+                    } else {
+                        console.log(`Node ${node.id} is not a text node.`);
+                    }
+                });
+            } else {
+                console.log("No nodes selected.");
+            }
         },
         setFontSize: (textNode, size) => {
             textNode.characterStyle.fontSize = size;
@@ -87,21 +120,15 @@ function start() {
             const stroke = editor.makeStroke({ color, width: 2 });
             object.stroke = stroke;
         },
-        getCurrentSelection: () => {
-            const selectedObjects = editor.context.selection;
-            return selectedObjects;
-        },
+
         setObjectAsSelected: (object) => {
             editor.context.selection = object;
         },
-        addNewPage(width, height) {
+        addNewPage: (width, height) => {
             const newArtboard = editor.documentRoot.pages.addPage({ width: width, height: height });
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(newArtboard);
-        },
-        removeObject() {
-
-        },
+        }
 
     };
     // Expose sandboxApi to the UI runtime.
