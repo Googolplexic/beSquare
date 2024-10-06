@@ -123,7 +123,7 @@ const tools = [
         "type": "function",
         "function": {
             "name": "create_ellipse",
-            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height of the ellipse in pixels, the x and y coordinates, a rotation angle, and an RGBA color value. If only one size value is given, then assume circle and have same width and height. The rotation amount is in degrees and rotates the rectangle around its center. 0 should be the default rotation amount.",
+            "description": "Draws a ELLIPSE or circle of a given size and color on the screen. It takes the width and height of the ellipse in pixels, the x and y coordinates, a rotation angle, and an RGBA color value. If only one size value is given, then assume circle and have same width and height. The rotation amount is in degrees and rotates the ellipse around its center. 0 should be the default rotation amount.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -177,12 +177,12 @@ const tools = [
         }
     },
 
-    
+
     {
         "type": "function",
         "function": {
             "name": "create_text",
-            "description": "creates a text element on the page at a certain location, and of a certain color",
+            "description": "Creates a text element on the page at a certain location, and of a certain color. The angle parameter will rotate the text and should default to 0 if not provided in prompt.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -197,6 +197,10 @@ const tools = [
                     "yLocation": {
                         "type": "integer",
                         "description": "Y coordinate of the top left of the text (0,0 is the top left of the canvas grid)."
+                    },
+                    "angle": {
+                        "type": "number",
+                        "description": "Angle in degrees to rotate the text."
                     },
                     "color": {
                         "type": "object",
@@ -226,7 +230,7 @@ const tools = [
                         "description": "fontSize"
                     }
                 },
-                "required": ["text", "xLocation", "yLocation", "color", "size"],
+                "required": ["text", "xLocation", "yLocation", "angle", "color", "size"],
                 "additionalProperties": false
             }
         }
@@ -372,11 +376,11 @@ function create_ellipse(width, height, xLocation, yLocation, angle, color) {
     return `Created a ellipse with  dimensions ${width}x${height} at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and rotated by ${angle} degrees`;
 }
 
-function create_text(text, xLocation, yLocation, color, size) {
+function create_text(text, xLocation, yLocation, angle, color, size) {
     const command = 'createText';
-    const params = { text, xLocation, yLocation, color, size };
+    const params = { text, xLocation, yLocation, angle, color, size };
     sendMessage(command, params);
-    return `Created text with content "$${text}" at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and size ${size}`;
+    return `Created text with content "${text}" at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha}) and rotated by ${angle} degrees`;
 }
 
 function create_line(xStart, yStart, xEnd, yEnd, width, color) {

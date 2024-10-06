@@ -196,7 +196,7 @@ async function processToolCalls(toolCalls) {
                     output = await rotate_selected(parsedArgs.angle);
                     break;
                 case 'create_text':
-                    output = await create_text(parsedArgs.text, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color, parsedArgs.size);
+                    output = await create_text(parsedArgs.text, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.angle, parsedArgs.color, parsedArgs.size);
                     break;
 
                 // Add cases for other functions as needed
