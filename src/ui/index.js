@@ -10,11 +10,6 @@ addOnUISdk.ready.then(async () => {
     // i.e., in the code.js file of this add-on.
     const scriptApi = await runtime.apiProxy("script");
 
-    const createRectangleButton = document.getElementById("createRectangle");
-    createRectangleButton.addEventListener("click", async event => {
-        scriptApi.createRectangle({ red: 1, green: 0, blue: 1, alpha: 1 });
-    });
-    createRectangleButton.disabled = false;
     // Request microphone access.
     const microphoneButton = document.getElementById('request-mic');
     let mediaRecorder; // To record audio

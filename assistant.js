@@ -1,60 +1,119 @@
 // assistant.js
+const { create } = require('lodash');
 const { sendMessage } = require('./websocket');
 
 const tools = [
-{
-    "type": "function",
-    "function": {
-        "name": "create_rectangle",
-        "description": "Draws a rectangle of a given size and color on the screen. It takes the width and height of the rectangle in pixels, the x and y coordinates for the top left corner, and an RGBA color value.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "width": {
-                    "type": "integer",
-                    "description": "Width of the rectangle in pixels."
-                },
-                "height": {
-                    "type": "integer",
-                    "description": "Height of the rectangle in pixels."
-                },
-                "xLocation": {
-                    "type": "integer",
-                    "description": "X coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
-                },
-                "yLocation": {
-                    "type": "integer",
-                    "description": "Y coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
-                },
-                "color": {
-                    "type": "object",
-                    "properties": {
-                        "red": {
-                            "type": "number",
-                            "description": "Red component of the color (0 to 1)."
-                        },
-                        "green": {
-                            "type": "number",
-                            "description": "Green component of the color (0 to 1)."
-                        },
-                        "blue": {
-                            "type": "number",
-                            "description": "Blue component of the color (0 to 1)."
-                        },
-                        "alpha": {
-                            "type": "number",
-                            "description": "Alpha component of the color (0 for transparent to 1 for opaque)."
-                        }
+    {
+        "type": "function",
+        "function": {
+            "name": "create_rectangle",
+            "description": "Draws a rectangle of a given size and color on the screen. It takes the width and height of the rectangle in pixels, the x and y coordinates for the top left corner, and an RGBA color value.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "width": {
+                        "type": "integer",
+                        "description": "Width of the rectangle in pixels."
                     },
-                    "required": ["red", "green", "blue", "alpha"],
-                    "additionalProperties": false
-                }
-            },
-            "required": ["width", "height", "xLocation", "yLocation", "color"],
-            "additionalProperties": false
+                    "height": {
+                        "type": "integer",
+                        "description": "Height of the rectangle in pixels."
+                    },
+                    "xLocation": {
+                        "type": "integer",
+                        "description": "X coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
+                    },
+                    "yLocation": {
+                        "type": "integer",
+                        "description": "Y coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left)."
+                    },
+                    "color": {
+                        "type": "object",
+                        "properties": {
+                            "red": {
+                                "type": "number",
+                                "description": "Red component of the color (0 to 1)."
+                            },
+                            "green": {
+                                "type": "number",
+                                "description": "Green component of the color (0 to 1)."
+                            },
+                            "blue": {
+                                "type": "number",
+                                "description": "Blue component of the color (0 to 1)."
+                            },
+                            "alpha": {
+                                "type": "number",
+                                "description": "Alpha component of the color (0 for transparent to 1 for opaque)."
+                            }
+                        },
+                        "required": ["red", "green", "blue", "alpha"],
+                        "additionalProperties": false
+                    }
+                },
+                "required": ["width", "height", "xLocation", "yLocation", "color"],
+                "additionalProperties": false
+            }
+        }
+    },
+
+    {
+        "type": "function",
+        "function": {
+            "name": "create_line",
+            "description": "Creates a line from a starting point to an ending point with a specified stroke width and color",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "xStart": {
+                        "type": "number",
+                        "description": "The x-coordinate of the starting point"
+                    },
+                    "yStart": {
+                        "type": "number",
+                        "description": "The y-coordinate of the starting point"
+                    },
+                    "xEnd": {
+                        "type": "number",
+                        "description": "The x-coordinate of the ending point"
+                    },
+                    "yEnd": {
+                        "type": "number",
+                        "description": "The y-coordinate of the ending point"
+                    },
+                    "width": {
+                        "type": "number",
+                        "description": "The stroke width of the line"
+                    },
+                    "color": {
+                        "type": "object",
+                        "properties": {
+                            "red": {
+                                "type": "number",
+                                "description": "Red component of the color (0 to 1)."
+                            },
+                            "green": {
+                                "type": "number",
+                                "description": "Green component of the color (0 to 1)."
+                            },
+                            "blue": {
+                                "type": "number",
+                                "description": "Blue component of the color (0 to 1)."
+                            },
+                            "alpha": {
+                                "type": "number",
+                                "description": "Alpha component of the color (0 for transparent to 1 for opaque)."
+                            }
+                        },
+                        "required": ["red", "green", "blue", "alpha"],
+                        "additionalProperties": false
+                    }
+                },
+                "required": ["xStart", "yStart", "xEnd", "yEnd", "width","color"]
+            }
         }
     }
-}
+
 ];
 
 function create_rectangle(width, height, xLocation, yLocation, color) {
@@ -63,5 +122,10 @@ function create_rectangle(width, height, xLocation, yLocation, color) {
     sendMessage(command, params);
     return `Created a rectangle with dimensions ${width}x${height} at position (${xLocation}, ${yLocation}) with color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
 }
-
-module.exports = { tools, create_rectangle };
+function create_line(xStart, yStart, xEnd, yEnd, width, color) {
+    const command = 'createLine';
+    const params = { xStart, yStart, xEnd, yEnd, width, color };
+    sendMessage(command, params);
+    return `Created a line from (${xStart}, ${yStart}) to (${xEnd}, ${yEnd}) with a stroke width of ${width} and color RGBA(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
+}
+module.exports = { tools, create_rectangle, create_line };
