@@ -83,6 +83,18 @@ function start() {
             const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
             object.stroke = stroke;
         },
+        getCurrentSelection: () => {
+            const selectedObjects = editor.context.selection;
+            return selectedObjects;
+        },
+        setObjectAsSelected: (object) => {
+            editor.context.selection = object;
+        },
+        addNewPage(width, height) {
+            const newArtboard = editor.documentRoot.pages.addPage({ width: width, height: height });
+            const insertionParent = editor.context.insertionParent;
+            insertionParent.children.append(newArtboard);
+        }
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);
