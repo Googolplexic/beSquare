@@ -17,7 +17,6 @@ addOnUISdk.ready.then(async () => {
     createRectangleButton.disabled = false;
     // Request microphone access.
     const microphoneButton = document.getElementById('request-mic');
-    const audioOutput = document.getElementById('audio-output');
     let mediaRecorder; // To record audio
     let audioChunks = []; // To store audio chunks
     let stream; // Variable to hold the audio stream
@@ -67,6 +66,42 @@ addOnUISdk.ready.then(async () => {
 
     });
     microphoneButton.disabled = false;
+
+
+
+    const ws = new WebSocket('ws://localhost:5001');
+
+    // WebSocket message handler
+    ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        if (data.message === 'invokeFunction') {
+            const { functionName, params } = data;
+            console.log(`Invoking function ${functionName} with params:`);
+            // Check if the function exists in scriptApi and invoke it
+            if (typeof scriptApi[functionName] === 'function') {
+                scriptApi[functionName](...params);
+            } else {
+                console.error(`Function ${functionName} does not exist on scriptApi`);
+            }
+        }
+    };
+
+    ws.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
+
+    ws.onclose = () => {
+        console.log('Disconnected from WebSocket server');
+    };
+
+    // Define the function to be called with parameters
+    function myClientFunction(num, str) {
+        console.log(`Client function invoked! Params: num=${num}, str=${str}`);
+    }
+
+
+
 
     const gptTranscript = document.getElementById("initAssistant");
     let globalcurrentThreadID = "";
