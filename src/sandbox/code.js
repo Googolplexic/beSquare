@@ -1,6 +1,14 @@
 import addOnSandboxSdk from "add-on-sdk-document-sandbox";
 import { editor } from "express-document-sdk";
+
+
+// import fs from "fs";
+//import OpenAI from "openai";
 // Get the document sandbox runtime.
+
+
+
+
 const { runtime } = addOnSandboxSdk.instance;
 
 
@@ -27,6 +35,9 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
         },
+
+     
+        
         createEllipse: (width, height, xLocation, yLocation, color) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.
@@ -130,8 +141,11 @@ function start() {
             insertionParent.children.append(newArtboard);
         }
 
+
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);
 }
+
+
 start();

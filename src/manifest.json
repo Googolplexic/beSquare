@@ -26,7 +26,11 @@
             "main": "index.html",
             "documentSandbox": "sandbox/code.js",
             "permissions": {
+
+                "sandbox": ["allow-popups"]
+
                 "microphone": "*"
+
             }
         }
     ]
