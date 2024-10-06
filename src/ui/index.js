@@ -167,7 +167,7 @@ addOnUISdk.ready.then(async () => {
     // });
 
     async function initializeThread() {
-        const response = await fetch('http://localhost:3000/api/thread', {
+        const response = await fetch('http://localhost:3001/api/thread', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ addOnUISdk.ready.then(async () => {
     }
     
     async function sendMessage(threadId, message) {
-        const response = await fetch('http://localhost:3000/api/chat', {
+        const response = await fetch('http://localhost:3001/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ addOnUISdk.ready.then(async () => {
             formData.append('audio', webmFile);
     
             // Send the request
-            const response = await fetch('http://localhost:3000/api/transcribe', {
+            const response = await fetch('http://localhost:3001/api/transcribe', {
                 method: 'POST',
                 body: formData
             });
