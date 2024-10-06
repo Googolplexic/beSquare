@@ -42,8 +42,8 @@ function start() {
             line.start = { x: xStart, y: yStart };
             line.end = { x: xEnd, y: yEnd };
             // Define line stroke.
-            const lineStroke = editor.makeColorStroke({red, green, blue, alpha});
-            line.stroke = lineStroke;
+            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+            line.stroke = stroke;
             // Add the line to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(line);
@@ -62,7 +62,27 @@ function start() {
             insertionParent.children.append(textNode);
         },
 
-        
+        setObjectFillColor: (object, {red, green, blue, alpha }) => {
+            const fill = editor.makeColorFill({red, green, blue, alpha});
+            object.fill = fill;
+        },
+        setTextContent: (textNode, text) => {
+            textNode.text = text;
+        },
+        setTextFillColor: (textNode, {red, green, blue, alpha }) => {
+            const fill = editor.makeColorFill({red, green, blue, alpha});
+            textNode.fill = fill;
+        },
+        setFontSize: (textNode, size) => {
+            textNode.characterStyle.fontSize = size;
+        },
+        setFontStyle: (textNode, style) => {
+            textNode.characterStyle.fontStyle = style;
+        },  
+        setObjectStroke: (object, {red, green, blue, alpha }) => {
+            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+            object.stroke = stroke;
+        },
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);
