@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools, create_rectangle, create_line, create_ellipse, create_text, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected, set_selected_fill_color, set_selection_text_content } = require('./assistant');
+const { tools, create_rectangle, create_line, create_ellipse, create_text, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected, set_selected_fill_color, set_selection_text_content, create_triangle } = require('./assistant');
 const { initWebSocket } = require('./websocket');
 const { create } = require('lodash');
 
@@ -203,6 +203,9 @@ async function processToolCalls(toolCalls) {
                     break;
                 case 'set_selection_text_content':
                     output = await set_selection_text_content(parsedArgs.content);
+                    break;
+                case 'create_triangle':
+                    output = await create_triangle(parsedArgs.x1, parsedArgs.y1, parsedArgs.x2, parsedArgs.y2, parsedArgs.x3, parsedArgs.y3, parsedArgs.color);
                     break;
 
                 // Add cases for other functions as needed

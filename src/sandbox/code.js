@@ -41,7 +41,40 @@ function start() {
                 console.error("Error getting page height:", error);
             }
         },
+        createTriangle: (x1, y1, x2, y2, x3, y3, color) => {
+            try {
+                // Create a new path node for the triangle (passing an empty object as the argument)
+                const pathNode = editor.createPath(`M ${x1},${y1} L ${x2},${y2} L ${x3},${y3} Z`);
 
+                // Define the triangle vertices using a path string (SVG-like syntax)
+                const pathData = `M ${x1},${y1} L ${x2},${y2} L ${x3},${y3} Z`; // Move to first point, draw lines to next two, and close path
+                console.log("pathData", pathData);
+                // Ensure pathData is a valid string
+                if (typeof pathData === 'string') {
+                    pathNode.pathData = pathData; // Assign the path data to the path node
+                } else {
+                    throw new Error('Invalid path data. Expected string.');
+                }
+
+                // Set the fill color for the triangle (color parameter used for both fill and stroke)
+                const fill = editor.makeColorFill(color);
+                pathNode.fill = fill;
+
+                // Set the stroke color for the triangle (same color as the fill)
+                const stroke = editor.makeStroke({
+                    color: color
+                }
+                );
+                pathNode.stroke = stroke; // Apply the stroke (no stroke width defined)
+
+                // Log triangle creation
+                console.log(`Created triangle with vertices (${x1}, ${y1}), (${x2}, ${y2}), (${x3}, ${y3}) and color.`);
+                const insertionParent = editor.context.insertionParent;
+                insertionParent.children.append(pathNode); // Add the triangle to the document
+            } catch (error) {
+                console.error("Error creating triangle:", error);
+            }
+        },
         // Function to create a rectangle
         createRectangle: (width, height, xLocation, yLocation, angle, color) => {
             try {
@@ -278,7 +311,26 @@ function start() {
 
                     selectedObjects.forEach(node => {
                         // Update the translation of each selected object to the target position
-                        node.translation = { x: targetX, y: targetY };
+                        if (node.type === "Text") {
+                            node.setPositionInParent({ x: targetX, y: targetY }, { x: 0, y: 0 });
+                        }
+                        else if (node.type === "Ellipse") {
+                            node.setPositionInParent({ x: targetX, y: targetY }, { x: node.rx, y: node.ry });
+                        }
+                        else if (node.type === "Rectangle") { node.setPositionInParent({ x: targetX, y: targetY }, { x: node.width / 2, y: node.height / 2 }); }
+                        else if (node.type === "Line") {
+                            let width = node.endX - node.startX;
+                            let height = node.endY - node.startY;
+                            node.setEndPoints(targetX - width / 2, targetY - height / 2, targetX + width / 2, targetY + height / 2);
+                        }
+                        else if (node.type === "Path") {
+                            let width = node.boundsLocal.width;
+                            let height = node.boundsLocal.height;
+                            let pageWidth = editor.context.currentPage.width;
+                            let pageHeight = editor.context.currentPage.height;
+                            node.translation = { x: targetX - width / 2 - pageWidth/2, y: targetY - height / 2 - pageHeight/2 };
+                        }
+                        else { node.translation = { x: targetX, y: targetY }; }
                         console.log(`Moved node with ID: ${node.id} to new position (${targetX}, ${targetY}).`);
                     });
                 } else {
