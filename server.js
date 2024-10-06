@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools, create_rectangle, create_line, create_ellipse } = require('./assistant');
+const { tools, create_rectangle, create_line, create_ellipse, create_text } = require('./assistant');
 const { initWebSocket } = require('./websocket');
 const { create } = require('lodash');
 
@@ -179,6 +179,9 @@ async function processToolCalls(toolCalls) {
                     break;
                 case 'create_ellipse':
                     output = await create_ellipse(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
+                    break;
+                case 'create_text':
+                    output = await create_text(parsedArgs.text, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color, parsedArgs.size);
                     break;
                 // Add cases for other functions as needed
                 default:

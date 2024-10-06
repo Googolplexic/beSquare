@@ -62,10 +62,11 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(line);
         },
-        createText: (text, xLocation, yLocation, color) => {
+        createText: (text, xLocation, yLocation, color, size) => {
             const textNode = editor.createText();
             // Set the text content.
             textNode.text = text;
+            textNode.size = size;
             // Define text position.
             textNode.translation = { x: xLocation, y: yLocation };
             // Set the text color.
