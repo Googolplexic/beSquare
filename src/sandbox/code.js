@@ -8,17 +8,15 @@ function start() {
     // i.e., to the index.html file of this add-on.
 
     const sandboxApi = {
-        createRectangle: () => {
+        createRectangle: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
             const rectangle = editor.createRectangle();
             // Define rectangle dimensions.
-            rectangle.width = 240;
-            rectangle.height = 180;
+            rectangle.width = width;
+            rectangle.height = height;
             // Define rectangle position.
-            rectangle.translation = { x: 10, y: 10 };
-            // Define rectangle color.
-            const color = { red: 0.32, green: 0.34, blue: 0.89, alpha: 1 };
+            rectangle.translation = { x: xLocation, y: yLocation };
             // Fill the rectangle with the color.
-            const rectangleFill = editor.makeColorFill(color);
+            const rectangleFill = editor.makeColorFill({red, green, blue, alpha});
             rectangle.fill = rectangleFill;
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;

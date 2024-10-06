@@ -11,12 +11,11 @@ addOnUISdk.ready.then(async () => {
     const scriptApi = await runtime.apiProxy("script");
     const createRectangleButton = document.getElementById("createRectangle");
     createRectangleButton.addEventListener("click", async event => {
-        await scriptApi.createRectangle();
+        await scriptApi.createRectangle(100, 100, 100, 100, { red: 1, green: 1, blue: 0, alpha: 1 });
     });
     // Request microphone access.
     const microphoneButton = document.getElementById('request-mic');
     const audioOutput = document.getElementById('audio-output');
-    const downloadButton = document.getElementById('download-audio');
     let mediaRecorder; // To record audio
     let audioChunks = []; // To store audio chunks
     let stream; // Variable to hold the audio stream
