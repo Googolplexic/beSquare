@@ -12,7 +12,7 @@ addOnUISdk.ready.then(async () => {
     
     const createRectangleButton = document.getElementById("createRectangle");
     createRectangleButton.addEventListener("click", async event => {
-        scriptApi.setSelectionObjectColorFill({ red: 1, green: 0, blue: 1, alpha: 1 });
+        scriptApi.createRectangle({ red: 1, green: 0, blue: 1, alpha: 1 });
     });
     createRectangleButton.disabled = false;
     // Request microphone access.
