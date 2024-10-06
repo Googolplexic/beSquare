@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools, create_rectangle, create_line, create_ellipse } = require('./assistant');
+const { tools, create_rectangle, create_line, create_ellipse, create_page, delete_selected, move_by_selected, move_to_selected, rotate_selected } = require('./assistant');
 const { initWebSocket } = require('./websocket');
 const { create } = require('lodash');
 
@@ -29,7 +29,7 @@ let ASSISTANT_ID;
 
 // Initialize the assistant
 async function initializeAssistant() {
-    console.log("tools, ", tools)
+    console.log("tools, ", tools);
     try {
         // Create a new assistant if ASSISTANT_ID is not provided in env
         if (!process.env.ASSISTANT_ID) {
@@ -170,7 +170,7 @@ async function processToolCalls(toolCalls) {
 
             switch (name) {
                 case 'create_rectangle':
-                    output = await create_rectangle(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
+                    output = await create_rectangle(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.angle, parsedArgs.color);
                     break;
                 case 'create_line':
                     console.log(parsedArgs);
@@ -178,8 +178,24 @@ async function processToolCalls(toolCalls) {
                     console.log("function complete");
                     break;
                 case 'create_ellipse':
-                    output = await create_ellipse(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
+                    output = await create_ellipse(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.angle, parsedArgs.color);
                     break;
+                case 'create_page':
+                    output = await create_page(parsedArgs.width, parsedArgs.height, parsedArgs.color);
+                    break;
+                case 'delete_selected':
+                    output = await delete_selected();
+                    break;
+                case 'move_by_selected':
+                    output = await move_by_selected(parsedArgs.deltaX, parsedArgs.deltaY);
+                    break;
+                case 'move_to_selected':
+                    output = await move_to_selected(parsedArgs.targetX, parsedArgs.targetY);
+                    break;
+                case 'rotate_selected':
+                    output = await rotate_selected(parsedArgs.angle);
+                    break;
+
                 // Add cases for other functions as needed
                 default:
                     output = `Function ${name} not implemented`;

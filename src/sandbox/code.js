@@ -47,7 +47,7 @@ function start() {
                 console.error("Error getting page height:", error);
             }
         },
-        createRectangle: (width, height, xLocation, yLocation, color) => {
+        createRectangle: (width, height, xLocation, yLocation, angle, color) => {
             console.log("Creating rectangle");
             const rectangle = editor.createRectangle();
 
@@ -57,6 +57,7 @@ function start() {
 
             // Define rectangle position.
             rectangle.translation = { x: xLocation, y: yLocation };
+            rectangle.setRotationInParent(angle, { x: rectangle.width / 2, y: rectangle.height / 2 });
 
             // Fill the rectangle with the color passed in the `color` object.
             const rectangleFill = editor.makeColorFill(color);
@@ -67,13 +68,14 @@ function start() {
             insertionParent.children.append(rectangle);
         },
 
-        createEllipse: (width, height, xLocation, yLocation, color) => {
+        createEllipse: (width, height, xLocation, yLocation, angle, color) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.
             ellipse.rx = width / 2;
             ellipse.ry = height / 2;
             // Define ellipse position.
-            ellipse.setPositionInParent({x:xLocation, y:yLocation}, {x:ellipse.rx, y:ellipse.ry});
+            ellipse.setPositionInParent({ x: xLocation, y: yLocation }, { x: ellipse.rx, y: ellipse.ry });
+            ellipse.setRotationInParent(angle, { x: ellipse.rx, y: ellipse.ry });
             // Fill the ellipse with the color.
             const ellipseFill = editor.makeColorFill(color);
             ellipse.fill = ellipseFill;
@@ -92,7 +94,7 @@ function start() {
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(line);
         },
-        createText: (text, xLocation, yLocation, color) => {
+        createText: (text, xLocation, yLocation, angle, color) => {
             const textNode = editor.createText();
 
             // Set the text content
@@ -100,6 +102,7 @@ function start() {
 
             // Set the position of the text
             textNode.setPositionInParent({ x: xLocation, y: yLocation }, { x: 0, y: 0 });
+            textNode.setRotationInParent(angle, { x: 0, y: 0 });
 
             // Set the font size
             textNode.characterStyles.fontSize = fontSize;
@@ -167,13 +170,108 @@ function start() {
         setObjectAsSelected: (object) => {
             editor.context.selection = object;
         },
-        addNewPage: (width, height) => {
-            const newArtboard = editor.documentRoot.pages.addPage({ width: width, height: height });
-            const insertionParent = editor.context.insertionParent;
-            insertionParent.children.append(newArtboard);
+        addNewPage: (pageWidth, pageHeight, color) => {
+            console.log("Creating a new page with the specified width, height, and background color.");
+            try {
+                // Create a new page with the specified width and height
+                const newPage = editor.documentRoot.pages.addPage({
+                    width: pageWidth,
+                    height: pageHeight
+                });
+
+                // Set the background color for the page's artboard
+                const artboard = newPage.artboards.first;
+
+                const fillColor = {
+                    red: color.red,
+                    green: color.green,
+                    blue: color.blue,
+                    alpha: color.alpha
+                };
+
+                const backgroundFill = editor.makeColorFill(fillColor);
+                artboard.fill = backgroundFill; // Apply the fill color to the artboard background
+
+                console.log(`Created page with size (${pageWidth}x${pageHeight}) and background color.`);
+
+                return newPage; // Return the created page if needed
+            } catch (error) {
+                console.error("Error creating page:", error);
+            }
+        },
+        deleteSelectedObjects: () => {
+            console.log("Deleting selected objects.");
+            try {
+                // Check if there is a selection
+                if (editor.context.hasSelection) {
+                    const selectedObjects = editor.context.selection;
+                    console.log(`Deleting ${selectedObjects}`);
+
+                    selectedObjects.forEach(node => {
+                        // Remove the node from its parent, effectively deleting it
+                        node.removeFromParent();
+                        console.log(`Deleted node with ID: ${node.id}`);
+                    });
+                } else {
+                    console.log("No nodes selected.");
+                }
+            } catch (error) {
+                console.error("Error deleting object:", error);
+            }
+        },
+
+        // Example to move all selected objects
+        moveBySelectedObjects: (deltaX, deltaY) => {
+            try {
+                if (editor.context.hasSelection) {
+                    const selectedObjects = editor.context.selection;
+
+                    selectedObjects.forEach(node => {
+
+                        node.translation = { x: node.translation.x + deltaX, y: node.translation.y + deltaY };
+                    });
+                } else {
+                    console.log("No objects selected.");
+                }
+            } catch (error) {
+                console.error("Error moving selected objects:", error);
+            }
+        },
+        moveToSelectedObjects: (targetX, targetY) => {
+            try {
+                if (editor.context.hasSelection) {
+                    const selectedObjects = editor.context.selection;
+
+                    selectedObjects.forEach(node => {
+
+                        node.translation = { x: targetX, y: targetY };
+                    });
+                } else {
+                    console.log("No objects selected.");
+                }
+            } catch (error) {
+                console.error("Error moving selected objects:", error);
+            }
+        },
+        rotateSelectedObjects: (angle) => {
+            try {
+                // Check if there are any selected nodes
+                if (editor.context.hasSelection) {
+                    const selectedObjects = editor.context.selection;
+
+                    // Rotate each selected object
+                    selectedObjects.forEach(node => {
+                        // Rotate the node by the specified angle
+                        node.setRotationInParent(angle, { x: node.width / 2, y: node.height / 2 }); // Rotate around the center
+                        console.log(`Rotated node with ID: ${node.id} by ${angle} degrees.`);
+                    });
+                } else {
+                    console.log("No objects selected to rotate.");
+                }
+            } catch (error) {
+                console.error("Error rotating selected objects:", error);
+            }
         }
-
-
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);

@@ -159,7 +159,7 @@ addOnUISdk.ready.then(async () => {
     async function chatWithAssistant(inputm, threadid) {
         const pageWidth = await scriptApi.getPageWidth();
         const pageHeight = await scriptApi.getPageHeight();
-        inputm = inputm + " The page width is" + pageWidth + " and the page height is" + pageHeight;
+        inputm = inputm + " The current page width is" + pageWidth + " and the page height is" + pageHeight;
         try {
             const response = await sendMessage(threadid, inputm);
             console.log('Assistant: ', response);
