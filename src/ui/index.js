@@ -38,8 +38,9 @@ addOnUISdk.ready.then(async () => {
     const gptsubmit = document.getElementById("sendButton");
     gptsubmit.addEventListener("click", async event => {
         await chatWithAssistant(getValue(),globalcurrentThreadID);
-        console.log(getValue());
-        console.log(globalcurrentThreadID);
+        console.log("sent value = " + getValue());
+        console.log("current thread = " + globalcurrentThreadID);
+        inputElement.value = "";
     });
 
     
@@ -97,6 +98,50 @@ addOnUISdk.ready.then(async () => {
             console.log('Assistant: ', resp);
         } catch (error) {
             console.error("Error:", error);
+        }
+    }
+
+    async function transcribeAudio(webmFile) {
+        try {
+            // Create FormData and append the file
+            const formData = new FormData();
+            formData.append('audio', webmFile);
+    
+            // Send the request
+            const response = await fetch('http://localhost:3000/api/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error);
+            }
+    
+            return data.transcription;
+    
+        } catch (error) {
+            console.error('Transcription failed:', error);
+            throw error;
+        }
+    }
+    
+    //usage in adobe express add-on:
+    async function handleAudioTranscription(webmBlob) {
+        try {
+            // Create a File object from the Blob if needed
+            const webmFile = new File([webmBlob], 'audio.webm', {
+                type: 'audio/webm'
+            });
+    
+            const transcription = await transcribeAudio(webmFile);
+            console.log('Transcription:', transcription);
+            
+            // Do something with the transcription...
+            
+        } catch (error) {
+            console.error('Error:', error);
         }
     }
     // Enable the button only when:
