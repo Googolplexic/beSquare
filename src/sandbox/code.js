@@ -3,12 +3,13 @@ import { editor } from "express-document-sdk";
 // Get the document sandbox runtime.
 const { runtime } = addOnSandboxSdk.instance;
 
+
 function start() {
     // APIs to be exposed to the UI runtime
     // i.e., to the index.html file of this add-on.
 
     const sandboxApi = {
-        createRectangle: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createRectangle: (width, height, xLocation, yLocation, { red, green, blue, alpha }) => {
             const rectangle = editor.createRectangle();
             // Define rectangle dimensions.
             rectangle.width = width;
@@ -16,13 +17,13 @@ function start() {
             // Define rectangle position.
             rectangle.translation = { x: xLocation, y: yLocation };
             // Fill the rectangle with the color.
-            const rectangleFill = editor.makeColorFill({red, green, blue, alpha});
+            const rectangleFill = editor.makeColorFill({ red, green, blue, alpha });
             rectangle.fill = rectangleFill;
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
         },
-        createEllipse: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createEllipse: (width, height, xLocation, yLocation, { red, green, blue, alpha }) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.
             ellipse.radiusX = width / 2;
@@ -30,47 +31,83 @@ function start() {
             // Define ellipse position.
             ellipse.translation = { x: xLocation, y: yLocation };
             // Fill the ellipse with the color.
-            const ellipseFill = editor.makeColorFill({red, green, blue, alpha});
+            const ellipseFill = editor.makeColorFill({ red, green, blue, alpha });
             ellipse.fill = ellipseFill;
             // Add the ellipse to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(ellipse);
-        },  
-        createLine: (xStart, yStart, xEnd, yEnd, {red, green, blue, alpha }) => {
+        },
+        createLine: (xStart, yStart, xEnd, yEnd, { red, green, blue, alpha }) => {
             const line = editor.createLine();
             // Define line start and end points.
             line.start = { x: xStart, y: yStart };
             line.end = { x: xEnd, y: yEnd };
             // Define line stroke.
-            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+            const stroke = editor.makeStroke({ color: { red, green, blue, alpha }, width: 2 });
             line.stroke = stroke;
             // Add the line to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(line);
         },
-        createText: (text, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createText: (text, xLocation, yLocation, { red, green, blue, alpha }) => {
             const textNode = editor.createText();
             // Set the text content.
             textNode.text = text;
             // Define text position.
             textNode.translation = { x: xLocation, y: yLocation };
             // Set the text color.
-            const textColor = editor.makeColorFill({red, green, blue, alpha});
+            const textColor = editor.makeColorFill({ red, green, blue, alpha });
             textNode.fill = textColor;
             // Add the text to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);
         },
+        setSelectionObjectColorFill: ({ red, green, blue, alpha }) => {
+            // Ensure there is a selection
+            if (editor.context.hasSelection) {
+                const selectedNodes = editor.context.selection;
+                // Loop through the selected nodes
+                selectedNodes.forEach(node => {
+                    // Check if the node is a rectangle
+                    console.log("Good so far??");
+                    if (node.type) {
+                        console.log("Good so far");
+                        // Create a new color (e.g., red)
+                        console.log("Good so far");
+                        const newFill = editor.makeColorFill({ red, green, blue, alpha });
+                        console.log("Good so far");
+                        // Create a fill with the new color
 
-        setObjectFillColor: (object, {red, green, blue, alpha }) => {
-            const fill = editor.makeColorFill({red, green, blue, alpha});
-            object.fill = fill;
+                        // Apply the new fill to the rectangle
+                        node.fill = newFill;
+
+                        console.log(`Updated rectangle ${node.id} fill to red.`);
+                    } else {
+                        console.log("Good so far??");
+                        console.log(`Node ${node.id} is not a rectangle.`);
+                    }
+                });
+            } else {
+                console.log("No nodes selected.");
+            }
         },
-        setTextContent: (textNode, text) => {
-            textNode.text = text;
+        setSelectionTextContent: (text) => {
+            if (editor.context.hasSelection) {
+                const selectedNodes = editor.context.selection;
+                selectedNodes.forEach(node => {
+                    if (node.type === "Text") {
+                        node.text = text;
+                        console.log(`Updated text ${node.id} content to ${text}.`);
+                    } else {
+                        console.log(`Node ${node.id} is not a text node.`);
+                    }
+                });
+            } else {
+                console.log("No nodes selected.");
+            }
         },
-        setTextFillColor: (textNode, {red, green, blue, alpha }) => {
-            const fill = editor.makeColorFill({red, green, blue, alpha});
+        setTextFillColor: (textNode, { red, green, blue, alpha }) => {
+            const fill = editor.makeColorFill({ red, green, blue, alpha });
             textNode.fill = fill;
         },
         setFontSize: (textNode, size) => {
@@ -78,23 +115,21 @@ function start() {
         },
         setFont: (textNode, font) => {
             textNode.characterStyle.font = font;
-        },  
-        setObjectStroke: (object, {red, green, blue, alpha }) => {
-            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+        },
+        setObjectStroke: (object, { red, green, blue, alpha }) => {
+            const stroke = editor.makeStroke({ color: { red, green, blue, alpha }, width: 2 });
             object.stroke = stroke;
         },
-        getCurrentSelection: () => {
-            const selectedObjects = editor.context.selection;
-            return selectedObjects;
-        },
+
         setObjectAsSelected: (object) => {
             editor.context.selection = object;
         },
-        addNewPage(width, height) {
+        addNewPage: (width, height) => {
             const newArtboard = editor.documentRoot.pages.addPage({ width: width, height: height });
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(newArtboard);
         }
+
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);
