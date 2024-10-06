@@ -103,6 +103,11 @@ addOnUISdk.ready.then(async () => {
         inputElement.value = "";
     });
 
+    const cancelsel = document.getElementById("discardCommand");
+    cancelsel.addEventListener("click", async event => {
+        inputElement.value = "";
+    });
+
     
     // Select the file input and audio player elements
     // const fileInput = document.getElementById('fileInput');
