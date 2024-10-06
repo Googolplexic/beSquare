@@ -29,7 +29,7 @@ addOnUISdk.ready.then(async () => {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 console.log('Microphone access granted', stream);
                 microphoneButton.setAttribute("isOn", "true");
-                microphoneButton.textContent = "Disable Microphone";
+                microphoneButton.textContent = "Process Voice";
 
                 // Start recording
                 mediaRecorder = new MediaRecorder(stream);
@@ -58,7 +58,7 @@ addOnUISdk.ready.then(async () => {
                     console.log('Microphone access deactivated');
                 }
                 microphoneButton.setAttribute("isOn", "false");
-                microphoneButton.textContent = "Enable Microphone";
+                microphoneButton.textContent = "Voice Command";
 
             } catch (error) {
                 console.error('Microphone access cannot be turned off', error);

@@ -25,7 +25,6 @@
             border-radius: 16px;
             border-style: solid;
             color: rgb(255, 255, 255);
-            font-family: sans-serif;
             height: 32px;
             width: 80%;
             margin: 0.5em;
@@ -46,6 +45,15 @@
             margin: 0.5em;
             width: 80%;
         }
+
+        .gif-container {
+            width: auto;
+            height: auto;
+            background-image: url('https://media1.tenor.com/m/PmktnnCEfsMAAAAC/cmon-do-something-original-cmon.gif'); /* GIF URL */
+            background-size: cover;    /* Make the GIF cover the entire container */
+            background-repeat: no-repeat;  /* Prevent the GIF from repeating */
+            background-position: center;   /* Center the GIF inside the container */
+        }
     </style>
 </head>
 
@@ -55,6 +63,8 @@
             You may use "addOnUISdk.app.ui.theme" to get the current theme and style accordingly.
         -->
     <div class="container">
+        <div class="gif-container"></div>
+
         <button id="createRectangle" disabled>Create Rectangle</button>
         <button id="request-mic" isOn=false disabled>Voice Command</button>
         <audio id="audio-output" controls autoplay></audio>
