@@ -28,7 +28,7 @@
             color: rgb(255, 255, 255);
             height: 32px;
             width: 80%;
-            margin: 0.5em;
+            margin: 0.25em;
             font-family: "comic sans ms", sans-serif;
         }
 
@@ -43,13 +43,13 @@
         }
 
         #audio-output {
-            margin: 0.5em;
+            margin: 0.25em;
             width: 80%;
         }
 
         .gif-container {
             width: 200px;
-            height: 200px;
+            height: 190px;
             background-image: url('https://media1.tenor.com/m/PmktnnCEfsMAAAAC/cmon-do-something-original-cmon.gif'); /* GIF URL */
             background-size: contain;    /* Make the GIF cover the entire container */
             background-repeat: no-repeat;  /* Prevent the GIF from repeating */
@@ -57,26 +57,39 @@
         }
         
         .gif-container2 {
-            width: 200px;
-            height: 200px;
+            width: 20px;
+            height: 25px;
             background-image: url('https://media.tenor.com/bhTUK_efj8YAAAAi/microphone-master-gis.gif'); /* GIF URL */
             background-size: contain;    /* Make the GIF cover the entire container */
-            background-repeat: no-repeat;  /* Prevent the GIF from repeating */
+            background-repeat: no-repeat;
+            margin: 5px;
         }
 
         .button-container {
             display: flex; /* Aligns items in a row */
-            gap: 10px; /* Adds space between buttons */
+            gap: 20px; /* Adds space between buttons */
+            margin: 5px;
         }
 
         #userInput {
-            margin: 0.5em;
+            margin: 0.2em;
             width: 250px;
-            height: 150px;
+            height: 75px;
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-family: "comic sans ms", sans-serif;
+            font-size: 14px;
+        }
+
+        #readOnly {
+            margin: 0.1em;
+            width: 250px;
+            height: 145px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
         }
 
@@ -95,7 +108,7 @@
         
         <button id = "initThread">New Instance</button>
         <button id="request-mic" isOn=false disabled>Voice Command</button>
-
+        <div class="gif-container2"></div>
 
         <script type="module" src="ui/index.js"></script>
 
@@ -108,9 +121,9 @@
         <div class="button-container">
             <button id="discardCommand">Discard</button>
             <button id="sendButton" >Execute</button>
-
         </div>
-        <div class="gif-container2"></div>
+
+        <textarea id="readOnly" type="text" placeholder="The AI will respond here..." readonly></textarea>
 
     </div>
 
