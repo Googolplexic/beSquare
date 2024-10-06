@@ -10,7 +10,6 @@ addOnUISdk.ready.then(async () => {
     // i.e., in the code.js file of this add-on.
     const scriptApi = await runtime.apiProxy("script");
 
-    
     // Request microphone access.
     const microphoneButton = document.getElementById('request-mic');
     let mediaRecorder; // To record audio

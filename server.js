@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools, create_rectangle } = require('./assistant');
+const { tools, create_rectangle, create_line } = require('./assistant');
 const { initWebSocket } = require('./websocket');
 const { create } = require('lodash');
 
@@ -162,18 +162,24 @@ async function processToolCalls(toolCalls) {
         const { name, arguments: args } = toolCall.function;
         let output;
 
+        console.log(`Processing tool call: ${name} with arguments: ${args}`); // Log tool call details
+
         try {
             const parsedArgs = JSON.parse(args);
 
             switch (name) {
                 case 'create_rectangle':
-                    const { width, height, xLocation, yLocation, color } = parsedArgs;
-                    output = await create_rectangle(width, height, xLocation, yLocation, color);
+                    output = await create_rectangle(parsedArgs.width, parsedArgs.height, parsedArgs.xLocation, parsedArgs.yLocation, parsedArgs.color);
                     break;
-                // Add cases for other functions as needed
+                case 'create_line':
+                    console.log(parsedArgs);
+                    output = await create_line(parsedArgs.xStart, parsedArgs.yStart, parsedArgs.xEnd, parsedArgs.yEnd, parsedArgs.width, parsedArgs.color);
+                    console.log("function complete");
+                    break;
                 default:
                     output = `Function ${name} not implemented`;
             }
+            console.log("function complete");
         } catch (error) {
             console.error(`Error processing tool call for ${name}:`, error);
             output = `Error: ${error.message}`;
@@ -186,6 +192,7 @@ async function processToolCalls(toolCalls) {
         };
     }));
 }
+
 
 async function waitForRunCompletion(threadId, runId) {
     let runStatus;

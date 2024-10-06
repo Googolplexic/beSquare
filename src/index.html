@@ -55,7 +55,7 @@
             background-repeat: no-repeat;  /* Prevent the GIF from repeating */
             background-position: center;   /* Center the GIF inside the container */
         }
-        
+
         .gif-container2 {
             width: 20px;
             height: 25px;
@@ -105,18 +105,22 @@
     <div class="container">
         <div class="gif-container"></div>
 
+
         
         <button id = "initThread">New Instance</button>
+
         <button id="request-mic" isOn=false disabled>Voice Command</button>
         <div class="gif-container2"></div>
 
         <script type="module" src="ui/index.js"></script>
 
-        <textarea input id = "userInput" type="text" placeholder="Your command will be displayed here"></textarea>
+        <textarea input id="userInput" type="text" placeholder="Your command will be displayed here"></textarea>
 
         <div class="button-container">
             <button id="discardCommand">Discard</button>
-            <button id="sendButton" >Execute</button>
+
+            <button id="sendButton">Execute</button>
+
         </div>
 
         <textarea id="readOnly" type="text" placeholder="The AI will respond here..." readonly></textarea>
