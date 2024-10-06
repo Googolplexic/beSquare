@@ -8,21 +8,25 @@ function start() {
     // i.e., to the index.html file of this add-on.
 
     const sandboxApi = {
-        createRectangle: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createRectangle: (width, height, xLocation, yLocation, color) => {
             const rectangle = editor.createRectangle();
+            
             // Define rectangle dimensions.
             rectangle.width = width;
             rectangle.height = height;
+            
             // Define rectangle position.
             rectangle.translation = { x: xLocation, y: yLocation };
-            // Fill the rectangle with the color.
-            const rectangleFill = editor.makeColorFill({red, green, blue, alpha});
+            
+            // Fill the rectangle with the color passed in the `color` object.
+            const rectangleFill = editor.makeColorFill(color);
             rectangle.fill = rectangleFill;
+            
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
         },
-        createEllipse: (width, height, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createEllipse: (width, height, xLocation, yLocation, color) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.
             ellipse.radiusX = width / 2;
@@ -30,47 +34,47 @@ function start() {
             // Define ellipse position.
             ellipse.translation = { x: xLocation, y: yLocation };
             // Fill the ellipse with the color.
-            const ellipseFill = editor.makeColorFill({red, green, blue, alpha});
+            const ellipseFill = editor.makeColorFill(color);
             ellipse.fill = ellipseFill;
             // Add the ellipse to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(ellipse);
         },  
-        createLine: (xStart, yStart, xEnd, yEnd, {red, green, blue, alpha }) => {
+        createLine: (xStart, yStart, xEnd, yEnd, color) => {
             const line = editor.createLine();
             // Define line start and end points.
             line.start = { x: xStart, y: yStart };
             line.end = { x: xEnd, y: yEnd };
             // Define line stroke.
-            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+            const stroke = editor.makeStroke({ color, width: 2 });
             line.stroke = stroke;
             // Add the line to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(line);
         },
-        createText: (text, xLocation, yLocation, {red, green, blue, alpha }) => {
+        createText: (text, xLocation, yLocation, color) => {
             const textNode = editor.createText();
             // Set the text content.
             textNode.text = text;
             // Define text position.
             textNode.translation = { x: xLocation, y: yLocation };
             // Set the text color.
-            const textColor = editor.makeColorFill({red, green, blue, alpha});
+            const textColor = editor.makeColorFill(color);
             textNode.fill = textColor;
             // Add the text to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(textNode);
         },
 
-        setObjectFillColor: (object, {red, green, blue, alpha }) => {
-            const fill = editor.makeColorFill({red, green, blue, alpha});
+        setObjectFillColor: (object, color) => {
+            const fill = editor.makeColorFill(color);
             object.fill = fill;
         },
         setTextContent: (textNode, text) => {
             textNode.text = text;
         },
-        setTextFillColor: (textNode, {red, green, blue, alpha }) => {
-            const fill = editor.makeColorFill({red, green, blue, alpha});
+        setTextFillColor: (textNode, color) => {
+            const fill = editor.makeColorFill(color);
             textNode.fill = fill;
         },
         setFontSize: (textNode, size) => {
@@ -79,8 +83,8 @@ function start() {
         setFont: (textNode, font) => {
             textNode.characterStyle.font = font;
         },  
-        setObjectStroke: (object, {red, green, blue, alpha }) => {
-            const stroke = editor.makeStroke({ color: {red, green, blue, alpha}, width: 2 });
+        setObjectStroke: (object, color) => {
+            const stroke = editor.makeStroke({ color, width: 2 });
             object.stroke = stroke;
         },
         getCurrentSelection: () => {
@@ -94,7 +98,11 @@ function start() {
             const newArtboard = editor.documentRoot.pages.addPage({ width: width, height: height });
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(newArtboard);
-        }
+        },
+        removeObject() {
+
+        },
+
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);

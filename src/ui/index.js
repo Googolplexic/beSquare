@@ -40,10 +40,9 @@ addOnUISdk.ready.then(async () => {
                 };
 
                 // When recording stops, process the audio
-                mediaRecorder.onstop = () => {
+                mediaRecorder.onstop = async () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); // Create blob from audio chunks
-                    const audioUrl = URL.createObjectURL(audioBlob); // Create URL for audio blob
-                    audioOutput.src = audioUrl; // Set audio element source to the recorded audio
+                    const file = new File([audioBlob], 'audio.webm', { type: 'audio/webm' }); // Convert blob to file
                     audioChunks = []; // Reset chunks for next recording
                 };
             } catch (error) {
