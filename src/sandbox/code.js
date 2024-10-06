@@ -1,7 +1,11 @@
 import addOnSandboxSdk from "add-on-sdk-document-sandbox";
 import { editor } from "express-document-sdk";
 
+
+// import fs from "fs";
+//import OpenAI from "openai";
 // Get the document sandbox runtime.
+
 
 
 
@@ -25,7 +29,35 @@ function start() {
             // Add the rectangle to the document.
             const insertionParent = editor.context.insertionParent;
             insertionParent.children.append(rectangle);
-        }
+        },
+        // poop: () => {
+        //     const openai = new OpenAI();
+
+        //     async function main() {
+        //         const transcription = await openai.audio.transcriptions.create({
+        //         file: a,
+        //         model: "whisper-1",
+        //         response_format: "text",
+        //         });
+            
+        //         console.log(transcription.text);
+        //     }
+        //     main();
+
+        // },
+        // filered: () => {
+        //     const file = event.target.files[0];
+        //     const reader = new FileReader();
+
+        //     reader.onload = (e) => {
+        //         // e.target.result contains the file's content as a string
+        //         console.log(e.target.result);
+        //     };
+
+        //     reader.readAsText(file); // Read the file as text
+        // }
+        
+
     };
     // Expose sandboxApi to the UI runtime.
     runtime.exposeApi(sandboxApi);

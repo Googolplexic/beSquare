@@ -36,6 +36,7 @@
                 cursor: pointer;
             }
         </style>
+        
     </head>
     <body>
         <!-- 
@@ -46,6 +47,10 @@
             <button id="createRectangle" disabled>Create Rectangle</button>
             <button id="createSquare" disabled>Create Square</button>
             <button id="gpttranslate" disabled>transcipt</button>
+            <input type="file" id="fileInput" accept=".mp3">
+            <audio id="audioPlayer" controls></audio>
+            <button id="generate-button">transcipt</button>
+            <input type="text" id="user-input"></input>
         </div>
 
         <script type="module" src="ui/index.js"></script>
