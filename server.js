@@ -116,7 +116,7 @@ app.post('/api/chat', async (req, res) => {
             }
 
 
-            const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+            const delay = Math.pow(2, retryCount) * 1500; // Exponential backoff
             await new Promise(resolve => setTimeout(resolve, delay));
             retryCount++;
         }
