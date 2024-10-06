@@ -37,8 +37,6 @@ function start() {
             insertionParent.children.append(rectangle);
         },
 
-     
-        
         createEllipse: (width, height, xLocation, yLocation, color) => {
             const ellipse = editor.createEllipse();
             // Define ellipse dimensions.

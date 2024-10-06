@@ -69,17 +69,17 @@
             gap: 10px; /* Adds space between buttons */
         }
 
-        .text-area {
+        #userInput {
             margin: 0.5em;
-            width: 250px;      /* Width of the text box */
-            height: 100px;     /* Height of the text box */
-            padding: 10px;     /* Internal padding */
-            border: 1px solid #ccc; /* Border styling */
-            border-radius: 5px; /* Rounded corners */
-            background-color: #fff; /* White background for editing */
+            width: 250px;
+            height: 150px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             font-family: "comic sans ms", sans-serif;
-            font-size: 14px;  /* Font size */
+            font-size: 14px;
         }
+
 
     </style>
 </head>
@@ -93,23 +93,24 @@
         <div class="gif-container"></div>
 
         <button id="createRectangle" disabled>Create Rectangle</button>
+        <button id = "initThread">New Instance</button>
         <button id="request-mic" isOn=false disabled>Voice Command</button>
 
 
         <script type="module" src="ui/index.js"></script>
 
-        <textarea class="text-area" placeholder="Your command will be displayed here"></textarea>
+        <textarea input id = "userInput" type="text" placeholder="Your command will be displayed here"></textarea>
 
         <div class="button-container">
-            <button id="discardCommand" disabled>Discard</button>
-            <button id="executeCommand" disabled>Execute</button>
+            <button id="discardCommand">Discard</button>
+            <button id="sendButton" >Execute</button>
+
         </div>
-<!--
-            <audio id="audioPlayer" controls></audio>
-            <button id="sendButton">submit</button>
-            <input type="text" id="userInput">-->
         <div class="gif-container2"></div>
+
     </div>
+
+    <script type="module" src="ui/index.js"></script>
 </body>
 
 </html>

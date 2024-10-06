@@ -12,7 +12,7 @@ addOnUISdk.ready.then(async () => {
     
     const createRectangleButton = document.getElementById("createRectangle");
     createRectangleButton.addEventListener("click", async event => {
-        scriptApi.setSelectionObjectColorFill({ red: 1, green: 0, blue: 1, alpha: 1 });
+        scriptApi.createRectangle({ red: 1, green: 0, blue: 1, alpha: 1 });
     });
     createRectangleButton.disabled = false;
     // Request microphone access.
@@ -45,6 +45,10 @@ addOnUISdk.ready.then(async () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); // Create blob from audio chunks
                     const file = new File([audioBlob], 'audio.webm', { type: 'audio/webm' }); // Convert blob to file
                     audioChunks = []; // Reset chunks for next recording
+                    const inputElement = document.getElementById('userInput');
+                    let transcbd = await transcribeAudio(file);
+                    inputElement.value = transcbd;
+
                 };
             } catch (error) {
                 console.error('Microphone access denied', error);
@@ -105,8 +109,14 @@ addOnUISdk.ready.then(async () => {
 
 
 
-    const gptTranscript = document.getElementById("initAssistant");
+    
+
+    const gptTranscript = document.getElementById("initThread");
+    //make thread
+
     let globalcurrentThreadID = "";
+    globalcurrentThreadID = initializeThread();
+    
     gptTranscript.addEventListener("click", async event => {
         const threadID = await initializeThread();
         console.log(threadID);
@@ -134,22 +144,27 @@ addOnUISdk.ready.then(async () => {
         inputElement.value = "";
     });
 
+    const cancelsel = document.getElementById("discardCommand");
+    cancelsel.addEventListener("click", async event => {
+        inputElement.value = "";
+    });
+
     
     // Select the file input and audio player elements
-    const fileInput = document.getElementById('fileInput');
-    const audioPlayer = document.getElementById('audioPlayer');
+    // const fileInput = document.getElementById('fileInput');
+    // const audioPlayer = document.getElementById('audioPlayer');
 
-    // Listen for changes on the file input
-    fileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0]; // Get the first selected file
-        if (file && file.type == "audio/mpeg") { // Ensure the file is an MP3
-            console.log(file.type);
-            const fileURL = URL.createObjectURL(file); // Create a URL for the file
-            audioPlayer.src = fileURL; // Set the audio player source to the file
-        } else {
-            alert('Please upload a valid MP3 file.');
-        }
-    });
+    // // Listen for changes on the file input
+    // fileInput.addEventListener('change', (event) => {
+    //     const file = event.target.files[0]; // Get the first selected file
+    //     if (file && file.type == "audio/mpeg") { // Ensure the file is an MP3
+    //         console.log(file.type);
+    //         const fileURL = URL.createObjectURL(file); // Create a URL for the file
+    //         audioPlayer.src = fileURL; // Set the audio player source to the file
+    //     } else {
+    //         alert('Please upload a valid MP3 file.');
+    //     }
+    // });
 
     async function initializeThread() {
         const response = await fetch('http://localhost:3000/api/thread', {
@@ -240,6 +255,6 @@ addOnUISdk.ready.then(async () => {
     // 2. scriptApi is available, and
     // 3. click event listener is registered.
     
-    gptTranscript.disabled = false;
+    //gptTranscript.disabled = false;
    
 });
