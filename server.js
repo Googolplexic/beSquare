@@ -5,8 +5,9 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const { tools } = require('./assistant');
-const WebSocket = require('ws');
+const { tools, create_rectangle } = require('./assistant');
+const { initWebSocket } = require('./websocket');
+const { create } = require('lodash');
 
 const app = express();
 const port = process.env.PORT || 3001;    // Port for HTTP server
@@ -226,17 +227,17 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
 
 
 function sendMessage(command, params) {
-    const message = (JSON.stringify({
+    const message = JSON.stringify({
         message: 'invokeFunction',
         functionName: command,
         params: params
-    }));
+    });
     clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(message);
         }
     });
-}
+};
 
 // Array to hold all connected clients
 let clients = [];
@@ -254,28 +255,17 @@ function unregisterClient(ws) {
 // Initialize the assistant and WebSocket server, then start the HTTP server
 initializeAssistant()
     .then(() => {
-        // Only call listen once after everything is initialized
         app.listen(port, () => {
             console.log(`HTTP server running on port ${port}`);
         });
 
-        // Start WebSocket server on `portWs`
-        const wss = new WebSocket.Server({ port: portWs });
-
-        wss.on('connection', (ws) => {
-            registerClient(ws);
-            console.log('Client connected');
-
-            ws.on('message', (message) => {
-                console.log(`Received message from client: ${message}`);
-            });
+        // Initialize WebSocket server with a callback function
+        initWebSocket(portWs, () => {
+            // This function will be called when a client connects
+            console.log('Client connected, now it\'s safe to call create_rectangle');
+            // Example usage of create_rectangle
+            create_rectangle(100, 100, 100, 100, { red: 1, green: 0, blue: 0, alpha: 1 });
         });
-        wss.on('close', () => {
-            console.log('Client disconnected');
-            unregisterClient(ws); // Unregister the client
-        });
-
-        console.log(`WebSocket server running on port ${portWs}`);
     })
     .catch(error => {
         console.error('Failed to start server:', error);

@@ -1,4 +1,7 @@
-tools= [
+// assistant.js
+const { sendMessage } = require('./websocket');
+
+const tools = [
     {
         type: "function",
         function: {
@@ -25,8 +28,7 @@ tools= [
                     },
                     color: {
                         type: "object",
-                        items: { red, green, blue, alpha },
-                        description: "Array containing the red, green, blue, and alpha values that define the rectangle color in the format [red, green, blue, alpha] where all componenets are between 0 and 1.",
+                        description: "Object containing the red, green, blue, and alpha values that define the rectangle color, where all components are between 0 and 1.",
                     },
                 },
                 required: ["width", "height", "xLocation", "yLocation", "color"],
@@ -34,27 +36,12 @@ tools= [
             },
         }
     }
-]
+];
 
-// trigger.js modified
-
-const messageSender = require('./server');
-
-// Example function to simulate an event that triggers a message
 function create_rectangle(width, height, xLocation, yLocation, color) {
-    // For demonstration, let's send an "add" command with random numbers
-    const command = 'create_rectangle';
-    const params = {width, height, xLocation, yLocation, color};
-    
-    // Call the sendMessage function in the messageSender module
-    messageSender.sendMessage(command, params);
+    const command = 'createRectangle';
+    const params = { width, height, xLocation, yLocation, color };
+    sendMessage(command, params);
 }
 
-
-
-// const create_rectangle = async (width, height, xLocation, yLocation, color) => {
-    
-// };
-
-// Export the function using CommonJS
-module.exports = { create_rectangle, tools };
+module.exports = { tools, create_rectangle };

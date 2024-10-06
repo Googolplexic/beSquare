@@ -80,7 +80,9 @@ addOnUISdk.ready.then(async () => {
             console.log(`Invoking function ${functionName} with params:`);
             // Check if the function exists in scriptApi and invoke it
             if (typeof scriptApi[functionName] === 'function') {
-                scriptApi[functionName](...params);
+                console.log("Match found")
+                console.log(params);
+                scriptApi[functionName](...Object.values(params));
             } else {
                 console.error(`Function ${functionName} does not exist on scriptApi`);
             }

@@ -18,6 +18,7 @@ function start() {
 
     const sandboxApi = {
         createRectangle: (width, height, xLocation, yLocation, color) => {
+            console.log("Creating rectangle");
             const rectangle = editor.createRectangle();
             
             // Define rectangle dimensions.
