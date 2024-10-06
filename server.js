@@ -33,7 +33,7 @@ async function initializeAssistant() {
         if (!process.env.ASSISTANT_ID) {
             const assistant = await openai.beta.assistants.create({
                 name: "Adobe Express Helper",
-                instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries.",
+                instructions: "You are a helpful assistant integrated with Adobe Express. You help users with their creative tasks and queries. Use tools available to you to accomplish task",
                 model: "gpt-4o-mini",
                 tools: tools
             });
