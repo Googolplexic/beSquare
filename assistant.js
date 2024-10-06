@@ -1,40 +1,46 @@
-export const tools = [
+tools= [
     {
         type: "function",
         function: {
             name: "create_rectangle",
-            description: "Draws a rectangle of a given size, it takes in the values width, height, xlocation, and ylocation of the top left corner, and an RGBA value. and draws the rectangle on the screen",
+            description: "Draws a rectangle of a given size. It takes in the values width, height, xLocation, and yLocation of the top left corner, and an RGBA value to draw the rectangle on the screen.",
             parameters: {
                 type: "object",
                 properties: {
                     width: {
-                        type: "int",
-                        description: "width of the rectangle in pixels",
+                        type: "integer",
+                        description: "Width of the rectangle in pixels.",
                     },
                     height: {
-                        type: "int",
-                        description: "height of the rectangle in pixels",
+                        type: "integer",
+                        description: "Height of the rectangle in pixels.",
                     },
                     xLocation: {
-                        type: "int",
-                        description: "x coordinate of the top right corner of the rectangle on the canvas grid where (0,0) is the top left corner",
+                        type: "integer",
+                        description: "X coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left).",
                     },
                     yLocation: {
-                        type: "int",
-                        description: "y coordinate of the top right corner of the rectangle on the canvas grid where (0,0) is the top left corner",
+                        type: "integer",
+                        description: "Y coordinate of the top left corner of the rectangle on the canvas grid (0,0 is the top left).",
                     },
                     color: {
                         type: "array",
-                        description: "array containing the red, green, blue, alpha values that define a color and opacity in the form [red, green, blue, alpha]",
+                        items: { type: "integer" },
+                        description: "Array containing the red, green, blue, and alpha values that define the rectangle color in the format [red, green, blue, alpha].",
                     },
                 },
-                required: ["order_id"],
+                required: ["width", "height", "xLocation", "yLocation", "color"],
                 additionalProperties: false,
             },
         }
     }
-];
+]
 
-export const create_rectangle = async (width, height, xLocation, yLocation) => {
-    
+
+
+const create_rectangle = async (width, height, xLocation, yLocation, color) => {
+    // Your implementation here
 };
+
+// Export the function using CommonJS
+module.exports = { create_rectangle, tools };

@@ -5,7 +5,8 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-import {tools} from "./assistant"
+const { tools } = require('./assistant');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
