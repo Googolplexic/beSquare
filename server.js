@@ -34,8 +34,7 @@ async function initializeAssistant() {
         if (!process.env.ASSISTANT_ID) {
             const assistant = await openai.beta.assistants.create({
                 name: "Adobe Express Helper",
-                instructions: "You are a helpful assistant named Doug integrated with Adobe Express. You help users with their creative tasks and queries. You will help the user \
-                create and change shapes and elements, add text, and create diagrams and images using simple shapes. Use tools available to you to accomplish tasks",
+                instructions: "You are a helpful assistant named Doug integrated with Adobe Express. You help users with their creative tasks and queries. You will help the user create and change shapes and elements, add text, and create diagrams and images using simple shapes. Use tools available to you to accomplish tasks",
                 model: "gpt-4o",
                 tools: tools
             });
@@ -117,7 +116,7 @@ app.post('/api/chat', async (req, res) => {
             }
 
 
-            const delay = Math.pow(2, retryCount) * 1500; // Exponential backoff
+            const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
             await new Promise(resolve => setTimeout(resolve, delay));
             retryCount++;
         }

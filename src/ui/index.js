@@ -125,45 +125,51 @@ addOnUISdk.ready.then(async () => {
     });
 
     const gptsubmit = document.getElementById("sendButton");
+    const loadingDots = document.querySelector('.loading-dots');
+    const readOnly = document.getElementById("readOnly");
     let isWaitingForResponse = false;
 
     gptsubmit.addEventListener("click", async event => {
-        if (isWaitingForResponse) return; // Prevent multiple clicks while waiting
+        if (isWaitingForResponse) return;
 
         try {
             isWaitingForResponse = true;
-            gptsubmit.disabled = true; // Disable the button
-            gptsubmit.textContent = "Loading..."; // Optional: update button text
-
+            gptsubmit.classList.add('loading');
+            loadingDots.classList.add('active');
+            readOnly.setAttribute('data-status', 'Processing...');
+            
             await chatWithAssistant(getValue(), globalcurrentThreadID);
-            console.log("sent value = " + getValue());
-            console.log("current thread = " + globalcurrentThreadID);
             inputElement.value = "";
         } catch (error) {
+            readOnly.value = "Sorry, there was an error processing your request.";
             console.error("Error in chat:", error);
-            // Optionally display error to user
         } finally {
             isWaitingForResponse = false;
-            gptsubmit.disabled = false;
-            gptsubmit.textContent = "Send"; // Reset button text
+            gptsubmit.classList.remove('loading');
+            loadingDots.classList.remove('active');
+            readOnly.setAttribute('data-status', 'Done');
+            setTimeout(() => readOnly.setAttribute('data-status', ''), 2000);
         }
     });
 
     async function chatWithAssistant(inputm, threadid) {
-        // include page size data in assistant call to enable understanding terms like "middle" and
-        //  right.
         const pageWidth = await scriptApi.getPageWidth();
         const pageHeight = await scriptApi.getPageHeight();
         inputm = inputm + " The current page width is" + pageWidth + " and the page height is" + pageHeight;
+        
         try {
-
+            readOnly.value = "Processing your request...";
             const response = await sendMessage(threadid, inputm);
-            console.log('Assistant: ', response);
-            // Update UI with response
-            readly.textContent = response;
+            
+            // Truncate response if too long
+            const maxLength = 150;
+            const displayResponse = response.length > maxLength ? 
+                response.substring(0, maxLength) + '...' : response;
+            
+            readOnly.value = displayResponse;
         } catch (error) {
             console.error("Error:", error);
-            throw error; // Rethrow to be caught in the click handler
+            throw error;
         }
     }
 

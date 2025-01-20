@@ -9,90 +9,219 @@
     <meta name="permissions-policy" content="microphone=('*')">
     <meta http-equiv="Permissions-Policy" content="microphone=('*')">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Get Started</title>
+    <title>Doug</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        body {
+            background: linear-gradient(135deg, #fff 0%, #A4A67C20 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+
         .container {
-            margin: 24px;
+            margin: 24px auto;
+            max-width: 480px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #0F2624;
+        }
 
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            background: #0D7339;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+            transform: rotate(-5deg);
+            box-shadow: 0 4px 12px rgba(13, 115, 57, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(5deg);
         }
 
         button {
-            background-color: rgb(0, 8, 255);
-            border-color: rgb(82, 88, 228);
-            border-radius: 16px;
-            border-style: solid;
-            color: rgb(255, 255, 255);
-            height: 32px;
+            background-color: rgba(13, 115, 57, 0.7);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            height: 40px;
             width: 80%;
-            margin: 0.25em;
-            font-family: "comic sans ms", sans-serif;
-        }
-
-        button:disabled {
-            background-color: rgb(177, 177, 177);
-            border-color: rgb(177, 177, 177);
+            margin: 8px 0;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(13, 115, 57, 0.2);
         }
 
         button:not([disabled]):hover {
-            background-color: rgb(64, 70, 202);
-            cursor: pointer;
+            background-color: rgba(15, 38, 36, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 38, 36, 0.3);
         }
 
-        #audio-output {
-            margin: 0.25em;
-            width: 80%;
-        }
-
-        .gif-container {
-            width: 200px;
-            height: 190px;
-            background-image: url('https://media1.tenor.com/m/PmktnnCEfsMAAAAC/cmon-do-something-original-cmon.gif'); /* GIF URL */
-            background-size: contain;    /* Make the GIF cover the entire container */
-            background-repeat: no-repeat;  /* Prevent the GIF from repeating */
-            background-position: center;   /* Center the GIF inside the container */
-        }
-
-        .gif-container2 {
-            width: 20px;
-            height: 25px;
-            background-image: url('https://media.tenor.com/bhTUK_efj8YAAAAi/microphone-master-gis.gif'); /* GIF URL */
-            background-size: contain;    /* Make the GIF cover the entire container */
-            background-repeat: no-repeat;
-            margin: 5px;
+        button:disabled {
+            background-color: #A4A67C;
+            color: #fff;
+            opacity: 0.5;
+            box-shadow: none;
         }
 
         .button-container {
-            display: flex; /* Aligns items in a row */
-            gap: 20px; /* Adds space between buttons */
-            margin: 5px;
+            display: flex;
+            gap: 12px;
+            margin: 8px 0;
+            width: 80%;
         }
 
-        #userInput {
-            margin: 0.2em;
-            width: 250px;
-            height: 75px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-family: "comic sans ms", sans-serif;
-            font-size: 14px;
+        .button-container button {
+            width: 50%;
+        }
+
+        #userInput, #readOnly {
+            width: 80%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid #A4A67C;
+            font-family: inherit;
+            font-size: 15px;
+            margin: 8px 0;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            color: #0F2624;
+        }
+
+        #userInput:focus, #readOnly:focus {
+            outline: none;
+            border-color: #0D7339;
+        }
+
+        #initThread {
+            width: 40%;
+            height: 32px;
+            font-size: 13px;
+            background-color: rgba(217, 70, 37, 0.7);
+            border-radius: 16px;
+        }
+
+        #initThread:hover {
+            background-color: rgba(217, 70, 37, 0.9);
+        }
+
+        #request-mic {
+            background-color: rgba(13, 115, 57, 0.8);
+            background-image: none;
+            transition: all 0.3s ease;
+        }
+
+        #request-mic:not([disabled]):hover {
+            background-color: rgba(13, 115, 57, 0.9);
+        }
+
+        #request-mic[isOn="true"] {
+            background-color: rgba(217, 70, 37, 0.9);
+            animation: pulse 2s infinite;
+        }
+
+        #request-mic[isOn="true"]:hover {
+            background-color: rgba(217, 70, 37, 1);
+        }
+
+        #discardCommand {
+            background-color: rgba(242, 118, 107, 0.7);
+            background-image: none;
+        }
+
+        #discardCommand:not([disabled]):hover {
+            background-color: rgba(242, 118, 107, 0.9);
+        }
+
+        #sendButton {
+            background-color: rgba(126, 145, 98, 0.7);
+        }
+
+        #sendButton:not([disabled]):hover {
+            background-color: rgba(164, 166, 124, 0.9);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .loading-dots {
+            display: none;
+            font-size: 24px;
+            color: #0D7339;
+            text-align: center;
+            margin: 8px 0;
+        }
+
+        .loading-dots.active {
+            display: block;
+            animation: dotty steps(1,end) 1s infinite;
+        }
+
+        @keyframes dotty {
+            0%   { content: ''; }
+            25%  { content: '.'; }
+            50%  { content: '..'; }
+            75%  { content: '...'; }
+            100% { content: ''; }
+        }
+
+        #sendButton.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        #sendButton.loading::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         #readOnly {
-            margin: 0.1em;
-            width: 250px;
-            height: 145px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
+            min-height: 60px;
+            max-height: 120px;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
+        #readOnly::after {
+            content: attr(data-status);
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 12px;
+            color: #666;
+            opacity: 0.8;
+        }
 
     </style>
 </head>
@@ -103,28 +232,19 @@
             You may use "addOnUISdk.app.ui.theme" to get the current theme and style accordingly.
         -->
     <div class="container">
-        <div class="gif-container"></div>
-
-
-        
-        <button id = "initThread">Reset Context</button>
-
+        <div class="logo">D</div>
+        <button id="initThread">Reset Context</button>
         <button id="request-mic" isOn=false disabled>Start Voice Command</button>
-        <div class="gif-container2"></div>
 
-        <script type="module" src="ui/index.js"></script>
-
-        <textarea input id="userInput" type="text" placeholder="Your command will be displayed here"></textarea>
+        <textarea id="userInput" placeholder="Your command will be displayed here"></textarea>
 
         <div class="button-container">
             <button id="discardCommand">Clear</button>
-
             <button id="sendButton">Send</button>
-
         </div>
 
-        <textarea id="readOnly" type="text" placeholder="Doug will respond here..." readonly></textarea>
-
+        <div class="loading-dots">Thinking</div>
+        <textarea id="readOnly" placeholder="Response will appear here..." readonly data-status=""></textarea>
     </div>
 
     <script type="module" src="ui/index.js"></script>
