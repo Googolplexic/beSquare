@@ -9,7 +9,8 @@
                 "name": "Express",
                 "apiVersion": 1
             }
-        ]
+        ],
+        "experimentalApis": true
     },
     "permissions": [
         "microphone"
@@ -26,11 +27,10 @@
             "main": "index.html",
             "documentSandbox": "sandbox/code.js",
             "permissions": {
-
-                "sandbox": ["allow-popups"],
-
+                "sandbox": [
+                    "allow-popups"
+                ],
                 "microphone": "*"
-
             }
         }
     ]

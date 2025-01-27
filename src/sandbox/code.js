@@ -164,7 +164,15 @@ function start() {
                 const textNode = editor.createText();
 
                 // Set the text content
-                textNode.fullContent.text = text;
+                textNode.text = text;
+
+                // Set the font size using proper structure for the entire text
+                textNode.fullContent.characterStyleRanges = [{
+                    length: text.length,
+                    start: 0,
+                    fontFamily: "Arial",
+                    fontSize: 24
+                }];
 
                 // Set the position of the text
                 textNode.setPositionInParent({ x: xLocation, y: yLocation }, { x: 0, y: 0 });
@@ -328,7 +336,7 @@ function start() {
                             let height = node.boundsLocal.height;
                             let pageWidth = editor.context.currentPage.width;
                             let pageHeight = editor.context.currentPage.height;
-                            node.translation = { x: targetX - width / 2 - pageWidth/2, y: targetY - height / 2 - pageHeight/2 };
+                            node.translation = { x: targetX - width / 2 - pageWidth / 2, y: targetY - height / 2 - pageHeight / 2 };
                         }
                         else { node.translation = { x: targetX, y: targetY }; }
                         console.log(`Moved node with ID: ${node.id} to new position (${targetX}, ${targetY}).`);
