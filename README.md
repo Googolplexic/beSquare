@@ -6,6 +6,8 @@ This project has been created with _@adobe/create-ccweb-add-on_.
 This Addon allows users to interact with OpenAI's models to build creative solutions to
 their projects on Adobe Express.
 
+Write-up from StormHacks: https://www.colemanlai.com/portfolio/be-square
+
 ## Tools
 
 - HTML
